@@ -241,4 +241,29 @@ WeekNab includes social sharing capabilities:
 
 ## 📝 License
 
-MIT 
+MIT
+
+## 🎨 Current Features
+
+- **Weekly Budget Management**
+  - Break down monthly budgets into weekly chunks
+  - Track spending patterns
+  - Visual progress indicators
+
+- **Modern UI/UX**
+  - Dark theme with modern design
+  - Responsive layout for all devices
+  - Intuitive navigation
+  - Beautiful animations and transitions
+
+- **Core Features**
+  1. Weekly Overview - See your budget broken down into weekly chunks
+  2. Budget Insights - Get intelligent recommendations
+  3. Category Analysis - Track spending categories
+  4. Transaction Feed - Review recent transactions
+
+- **Social Integration**
+  - Share functionality with major platforms
+  - Twitter, LinkedIn, and Facebook sharing
+  - Direct link sharing
+  - Community engagement 

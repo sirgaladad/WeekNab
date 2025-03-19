@@ -1,314 +1,202 @@
 <template>
   <div class="budget-detail">
-    <div class="header">
-      <button
-        class="back-button"
-        @click="router.back()"
-      >
-        ← Back to Budgets
-      </button>
+    <header class="header">
       <h1>{{ budget?.name || 'Loading...' }}</h1>
-    </div>
+    </header>
 
-    <div
-      v-if="loading"
-      class="loading"
-    >
+    <div v-if="loading" class="loading">
       Loading budget details...
     </div>
 
-    <div
-      v-else-if="error"
-      class="error"
-    >
+    <div v-else-if="error" class="error">
       {{ error }}
     </div>
 
-    <div
-      v-else
-      class="budget-content"
-    >
-      <!-- Weekly Overview -->
-      <section class="section">
+    <template v-else>
+      <ActionButtons :budget-id="budgetId" />
+      
+      <div class="weekly-overview">
         <h2>Weekly Overview</h2>
-        <p class="coming-soon">
-          Weekly budget breakdown coming soon!
-        </p>
-      </section>
-
-      <!-- Categories -->
-      <section class="section">
-        <h2>Categories</h2>
-        <div class="categories">
-          <div
-            v-for="group in categories"
-            :key="group.id"
-            class="category-group"
-          >
-            <h3>{{ group.name }}</h3>
-            <div class="category-list">
-              <div
-                v-for="category in group.categories || []"
-                :key="category.id"
-                class="category-item"
-              >
-                <div class="category-info">
-                  <span class="category-name">{{ category.name }}</span>
-                  <span
-                    class="category-balance"
-                    :class="{ negative: category.balance < 0 }"
-                  >
-                    {{ formatCurrency(category.balance) }}
-                  </span>
-                </div>
-                <div class="progress-bar">
-                  <div 
-                    class="progress" 
-                    :style="{ width: `${Math.min(100, (category.activity / (category.budgeted || 1)) * 100)}%` }"
-                    :class="{ warning: category.balance < 0 }"
-                  />
-                </div>
-              </div>
-            </div>
+        <div class="stats">
+          <div class="stat-item">
+            <span class="label">Income</span>
+            <span class="value positive">{{ formatCurrency(weeklyIncome) }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="label">Expenses</span>
+            <span class="value negative">{{ formatCurrency(weeklyExpenses) }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="label">Balance</span>
+            <span class="value" :class="{ negative: weeklyBalance < 0 }">
+              {{ formatCurrency(weeklyBalance) }}
+            </span>
           </div>
         </div>
-      </section>
+      </div>
 
-      <!-- Recent Transactions -->
-      <section class="section">
-        <h2>Recent Transactions</h2>
-        <div class="transactions">
-          <div
-            v-for="transaction in recentTransactions"
-            :key="transaction.id"
-            class="transaction-item"
-          >
-            <div class="transaction-info">
-              <span class="transaction-payee">{{ transaction.payee_name || 'Unknown Payee' }}</span>
-              <span
-                class="transaction-amount"
-                :class="{ negative: transaction.amount < 0 }"
-              >
-                {{ formatCurrency(transaction.amount) }}
-              </span>
-            </div>
-            <div class="transaction-details">
-              <span class="transaction-category">{{ transaction.category_name || 'Uncategorized' }}</span>
-              <span class="transaction-date">{{ formatDate(transaction.date) }}</span>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
+      <CategoryList :categories="categoryGroups" />
+      
+      <RecentTransactions :transactions="recentTransactions" />
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import * as ynabService from '@/services/ynab.service'
+import { useRoute } from 'vue-router'
 import type { BudgetDetail, CategoryGroup, TransactionDetail } from 'ynab'
+import { formatCurrency } from '@/utils/currency'
+import ActionButtons from '@/components/budget/ActionButtons.vue'
+import CategoryList from '@/components/budget/CategoryList.vue'
+import RecentTransactions from '@/components/budget/RecentTransactions.vue'
 
-const router = useRouter()
 const route = useRoute()
 const budgetId = route.params.id as string
 
 const budget = ref<BudgetDetail | null>(null)
-const categories = ref<CategoryGroup[]>([])
-const recentTransactions = ref<TransactionDetail[]>([])
 const loading = ref(true)
-const error = ref('')
+const error = ref<string | null>(null)
+const categoryGroups = ref<CategoryGroup[]>([])
+const recentTransactions = ref<TransactionDetail[]>([])
 
-const loadBudgetData = async () => {
+const weeklyIncome = ref(0)
+const weeklyExpenses = ref(0)
+const weeklyBalance = ref(0)
+
+onMounted(async () => {
   try {
-    // Load budget details
-    budget.value = await ynabService.getBudgetById(budgetId)
-    
-    // Load categories
-    categories.value = await ynabService.getCategories(budgetId)
-    
-    // Load recent transactions
-    recentTransactions.value = await ynabService.getTransactions(budgetId)
-    
+    // TODO: Implement API calls to fetch budget data
     loading.value = false
-  } catch (err) {
-    error.value = 'Failed to load budget details. Please try again.'
+  } catch (e) {
+    error.value = 'Failed to load budget details'
     loading.value = false
   }
-}
-
-const formatCurrency = (amount: number) => {
-  const value = amount / 1000 // YNAB stores amounts in milliunits
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD'
-  }).format(value)
-}
-
-const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric'
-  })
-}
-
-onMounted(() => {
-  loadBudgetData()
 })
 </script>
 
 <style scoped>
 .budget-detail {
   max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  margin: 0 auto;
+  padding: 1rem;
 }
 
 .header {
-  margin-bottom: 2rem;
-}
-
-.back-button {
-  background: none;
-  border: none;
-  color: var(--primary);
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 0;
-  margin-bottom: 1rem;
-  display: inline-block;
-}
-
-.back-button:hover {
-  text-decoration: underline;
+  margin-bottom: 1.5rem;
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: 1.75rem;
   color: var(--text);
   margin: 0;
 }
 
 .loading, .error {
   text-align: center;
-  margin: 4rem 0;
-  color: var(--text-secondary);
+  padding: 2rem;
+  background: var(--surface);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  margin: 1rem 0;
 }
 
 .error {
-  color: #dc2626;
+  color: var(--error);
 }
 
-.section {
+.weekly-overview {
   background: var(--surface);
   border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
   border: 1px solid var(--border);
 }
 
-h2 {
-  font-size: 1.5rem;
-  color: var(--text);
-  margin: 0 0 1.5rem 0;
-}
-
-.coming-soon {
-  color: var(--text-secondary);
-  font-style: italic;
-}
-
-.category-group {
-  margin-bottom: 2rem;
-}
-
-.category-group:last-child {
-  margin-bottom: 0;
-}
-
-h3 {
+.weekly-overview h2 {
   font-size: 1.25rem;
   color: var(--text);
-  margin-bottom: 1rem;
+  margin: 0 0 1rem 0;
 }
 
-.category-item {
-  margin-bottom: 1rem;
+.stats {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
 
-.category-info {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
+.stat-item {
+  background: var(--background);
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
 }
 
-.category-name {
-  color: var(--text);
-}
-
-.category-balance {
-  font-weight: 500;
-}
-
-.progress-bar {
-  height: 4px;
-  background: var(--border);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.progress {
-  height: 100%;
-  background: var(--primary);
-  transition: width 0.3s ease;
-}
-
-.progress.warning {
-  background: #dc2626;
-}
-
-.transaction-item {
-  padding: 1rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.transaction-item:last-child {
-  border-bottom: none;
-}
-
-.transaction-info {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-}
-
-.transaction-payee {
-  color: var(--text);
-  font-weight: 500;
-}
-
-.transaction-details {
-  display: flex;
-  justify-content: space-between;
-  color: var(--text-secondary);
+.label {
+  display: block;
   font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.value {
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.positive {
+  color: var(--success);
 }
 
 .negative {
-  color: #dc2626;
+  color: var(--error);
 }
 
-@media (max-width: 768px) {
+@media (min-width: 640px) {
   .budget-detail {
-    margin: 1rem;
+    padding: 2rem;
   }
 
   h1 {
     font-size: 2rem;
   }
 
-  .section {
+  .weekly-overview {
+    padding: 1.5rem;
+  }
+
+  .weekly-overview h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .stats {
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .stat-item {
     padding: 1rem;
+  }
+
+  .value {
+    font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .budget-detail {
+    padding: 3rem;
+  }
+
+  .header {
+    margin-bottom: 2rem;
+  }
+
+  h1 {
+    font-size: 2.5rem;
   }
 }
 </style> 

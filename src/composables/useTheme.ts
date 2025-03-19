@@ -1,34 +1,40 @@
-import { ref, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 
 export function useTheme() {
-  const isDark = ref(true)
+  const isDark = ref(false)
 
-  const toggleTheme = () => {
-    isDark.value = !isDark.value
-    document.documentElement.classList.toggle('light-theme')
-    localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
-  }
-
+  // Initialize theme from localStorage or system preference
   const initTheme = () => {
     const savedTheme = localStorage.getItem('theme')
     if (savedTheme) {
       isDark.value = savedTheme === 'dark'
-      if (!isDark.value) {
-        document.documentElement.classList.add('light-theme')
-      }
     } else {
-      // Check system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      isDark.value = prefersDark
-      if (!prefersDark) {
-        document.documentElement.classList.add('light-theme')
-      }
+      isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches
     }
+    updateTheme()
   }
 
-  onMounted(() => {
-    initTheme()
+  // Update theme in DOM and localStorage
+  const updateTheme = () => {
+    document.documentElement.classList.toggle('dark', isDark.value)
+    localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
+  }
+
+  // Toggle theme
+  const toggleTheme = () => {
+    isDark.value = !isDark.value
+  }
+
+  // Watch for system theme changes
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+  mediaQuery.addEventListener('change', (e) => {
+    if (!localStorage.getItem('theme')) {
+      isDark.value = e.matches
+    }
   })
+
+  // Initialize theme on mount
+  initTheme()
 
   return {
     isDark,

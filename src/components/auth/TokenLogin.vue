@@ -76,21 +76,46 @@ const handleSubmit = async () => {
     return
   }
 
+  // Remove any accidental whitespace and normalize token
+  const cleanToken = token.value.trim()
+  
+  // YNAB tokens are 64 characters long
+  if (cleanToken.length !== 64) {
+    showError.value = true
+    errorMessage.value = `Invalid token length. YNAB tokens should be 64 characters long (current length: ${cleanToken.length}).`
+    return
+  }
+
   isLoading.value = true
   showError.value = false
+  errorMessage.value = ''
 
   try {
-    const isValid = await AuthService.validateToken(token.value)
+    const isValid = await AuthService.validateToken(cleanToken)
     if (isValid) {
-      AuthService.saveToken(token.value)
-      router.push('/budgets')
-    } else {
-      showError.value = true
-      errorMessage.value = 'Invalid token. Please check and try again.'
+      AuthService.saveToken(cleanToken)
+      router.push('/dashboard')
     }
-  } catch (error) {
+  } catch (error: any) {
     showError.value = true
-    errorMessage.value = 'Failed to validate token. Please try again.'
+    
+    if (error.message.includes('401')) {
+      errorMessage.value = 'Invalid token. Please make sure you\'ve copied the entire token from YNAB.'
+    } else {
+      errorMessage.value = error.message || 'Failed to validate token. Please try again.'
+    }
+    
+    // Log the error for debugging
+    console.error('Token validation error:', {
+      message: error.message,
+      name: error.name,
+      stack: error.stack
+    })
+    
+    // Clear the token input only if it's an invalid token
+    if (error.message?.includes('Invalid YNAB token') || error.message?.includes('401')) {
+      token.value = ''
+    }
   } finally {
     isLoading.value = false
   }

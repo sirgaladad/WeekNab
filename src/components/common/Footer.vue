@@ -33,6 +33,19 @@
           </div>
           
           <div class="links-group">
+            <h4>Legal</h4>
+            <nav>
+              <router-link 
+                v-for="link in legalLinks" 
+                :key="link.url" 
+                :to="link.url"
+              >
+                {{ link.name }}
+              </router-link>
+            </nav>
+          </div>
+          
+          <div class="links-group">
             <h4>Connect With Us</h4>
             <div class="social-links">
               <a 
@@ -76,6 +89,12 @@
 import { socialLinks, companyLinks, companyInfo } from '@/config/social'
 
 const currentYear = new Date().getFullYear()
+
+const legalLinks = [
+  { name: 'Privacy Policy', url: '/privacy' },
+  { name: 'Terms of Service', url: '/terms' },
+  { name: 'Cookie Policy', url: '/cookies' }
+]
 </script>
 
 <script lang="ts">
@@ -122,7 +141,7 @@ export default {
 
 .footer-links {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
 }
 
