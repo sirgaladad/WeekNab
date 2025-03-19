@@ -1,44 +1,44 @@
 import { API } from 'ynab'
+import { AuthService } from './auth.service'
 
-export class YNABService {
-  private api: API
-  
-  constructor(accessToken: string) {
-    this.api = new API(accessToken)
-  }
+let ynabAPI: API | null = null
 
-  async getBudgets() {
-    try {
-      const budgetsResponse = await this.api.budgets.getBudgets()
-      return budgetsResponse.data.budgets
-    } catch (error) {
-      console.error('Error fetching budgets:', error)
-      throw error
-    }
+export function initYNABService(): API {
+  const token = AuthService.getToken()
+  if (!token) {
+    throw new Error('No YNAB token found')
   }
-
-  async getBudgetById(budgetId: string) {
-    try {
-      const budgetResponse = await this.api.budgets.getBudgetById(budgetId)
-      return budgetResponse.data.budget
-    } catch (error) {
-      console.error('Error fetching budget:', error)
-      throw error
-    }
-  }
+  ynabAPI = new API(token)
+  return ynabAPI
 }
 
-// Create singleton instance
-let ynabService: YNABService | null = null
-
-export const initYNABService = (accessToken: string) => {
-  ynabService = new YNABService(accessToken)
-  return ynabService
+export function getYNABService(): API {
+  if (!ynabAPI) {
+    return initYNABService()
+  }
+  return ynabAPI
 }
 
-export const getYNABService = () => {
-  if (!ynabService) {
-    throw new Error('YNAB service not initialized')
-  }
-  return ynabService
+export async function getBudgets() {
+  const api = getYNABService()
+  const response = await api.budgets.getBudgets()
+  return response.data.budgets
+}
+
+export async function getBudgetById(budgetId: string) {
+  const api = getYNABService()
+  const response = await api.budgets.getBudgetById(budgetId)
+  return response.data.budget
+}
+
+export async function getTransactions(budgetId: string) {
+  const api = getYNABService()
+  const response = await api.transactions.getTransactions(budgetId)
+  return response.data.transactions
+}
+
+export async function getCategories(budgetId: string) {
+  const api = getYNABService()
+  const response = await api.categories.getCategories(budgetId)
+  return response.data.category_groups
 } 
