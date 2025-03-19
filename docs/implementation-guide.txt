@@ -1,145 +1,156 @@
-# WeekNab Weekly View Implementation Guide
+# WeekNab Implementation Guide
 
-## Overview
+## Current Implementation Status
 
-The Weekly View feature is the core functionality of WeekNab, breaking down monthly YNAB budgets into weekly insights. This guide explains the implementation details and how to integrate the feature into the existing WeekNab application.
+### Completed Components
+1. **WeeklyDashboard.vue**
+   - Weekly budget overview
+   - Category spending tracking
+   - Progress visualization
+   - Category filters
+   - Transaction previews
 
-## Files Structure
+2. **Authentication**
+   - Token validation
+   - Error handling
+   - Secure storage
 
-1. **Components**:
-   - `src/components/budget/WeeklyView.vue` - The main component for the weekly view
-   - `src/views/WeeklyBudgetView.vue` - The route component that integrates WeeklyView
-   - `src/views/TransactionsView.vue` - Detailed transaction view with filtering capabilities
+### In Progress
+1. **Weekly Insights Section**
+   - Goal progress tracking
+   - Spending analysis
+   - Actionable recommendations
+
+2. **Enhanced Category Management**
+   - Expanded category list
+   - Detailed transaction views
+   - Category grouping
+
+## Component Structure
+
+1. **Core Components**:
+   - `src/components/dashboard/WeeklyDashboard.vue` - Main dashboard component
+   - `src/views/DashboardView.vue` - Dashboard container
+   - `src/views/DemoView.vue` - Demo version with sample data
 
 2. **Services**:
-   - `src/services/ynab-weekly.service.ts` - Extension of the YNAB service with weekly-specific functionality
+   - `src/services/auth.service.ts` - Authentication handling
+   - `src/services/ynab.service.ts` - YNAB API integration
+   - `src/services/demo-data.service.ts` - Demo data provider
 
-3. **Router Updates**:
-   - Added routes for `/budgets/:id/weekly` and `/budgets/:id/transactions`
+3. **Stores**:
+   - `src/stores/auth.ts` - Authentication state management
 
-## Architecture
+## Implementation Details
 
-The Weekly View architecture follows a hierarchical pattern:
-
+### Weekly Dashboard Layout
 ```
-BudgetDetailView
-    └── Link to WeeklyBudgetView
-         └── WeeklyView Component
-              └── Link to TransactionsView (filtered by category)
+WeeklyDashboard
+├── Header Section
+│   ├── Back to Budget Link
+│   ├── Weekly Dashboard Title
+│   └── Week Navigation
+├── Budget Overview
+│   ├── Total Budget
+│   ├── Amount Spent
+│   └── Remaining Amount
+├── Category Section
+│   ├── Category Filters
+│   ├── Category Cards
+│   │   ├── Category Info
+│   │   ├── Progress Bar
+│   │   └── Transactions
+└── Weekly Insights
+    ├── Overview Message
+    └── Goal Impact
 ```
 
-## Key Features
+### Category Management
+1. **Category Card Structure**:
+   - Category name and color
+   - Budget vs. spent amounts
+   - Progress visualization
+   - Transaction preview
+   - "View all transactions" link
 
-1. **Weekly Budget Breakdown**: 
-   - Divides monthly budget into weekly allocations
-   - Shows spending progress relative to the weekly budget
+2. **Category Filters**:
+   - All categories
+   - Over budget
+   - Under budget
 
-2. **Category Analysis**:
-   - Displays categories with weekly budget vs. actual spending
-   - Visual indicators for over-budget categories
-   - Filtering options (All, Over Budget, Under Budget, Essential)
+3. **Transaction Display**:
+   - Preview of recent transactions
+   - Full transaction list on demand
+   - Transaction details
 
-3. **Transaction Preview**:
-   - Shows recent transactions for each category
-   - Links to a dedicated transaction view for more details
+### Weekly Insights Section
+1. **Overview Components**:
+   - Weekly progress summary
+   - Spending patterns
+   - Budget adherence
 
-4. **Weekly Insights**:
-   - Highlights top spending categories
-   - Identifies over-budget areas
-   - Surfaces savings opportunities
+2. **Goal Tracking**:
+   - Progress towards goals
+   - Impact of current spending
+   - Recommendations
 
-## Implementation Steps
+## Next Steps
 
-1. **Install the New Components**:
-   - Create the file structure as outlined above
-   - Add the components to your project
+1. **Enhanced Demo Data**:
+   - Add more category examples
+   - Diverse transaction types
+   - Realistic spending patterns
+   - Goal scenarios
 
-2. **Update Router Configuration**:
-   - Add the new routes as shown in the router update
+2. **Weekly Insights Implementation**:
+   - Design insights layout
+   - Implement calculation logic
+   - Add visualization components
 
-3. **Modify BudgetDetailView**:
-   - Add action buttons to navigate to the Weekly View
-
-4. **Data Flow**:
-   - YNAB API → ynab.service.ts → ynab-weekly.service.ts → WeeklyView.vue
-
-## Mobile Optimizations
-
-The Weekly View is designed with a mobile-first approach:
-
-1. **Responsive Layout**:
-   - Single column layout on small screens
-   - Grid layout on larger screens
-
-2. **Touch-Friendly Elements**:
-   - Large tap targets for buttons and interactive elements
-   - Swipe-friendly navigation
-
-3. **Progressive Disclosure**:
-   - Collapsible transaction details
-   - Focused information architecture
-
-## Weekly Calculation Logic
-
-1. **Determining Weeks in Month**:
-   - Count the number of weeks (Monday-Sunday) in the current month
-   - Handle partial weeks at month start/end
-
-2. **Weekly Budget Allocation**:
-   - Divide monthly category budgets by the number of weeks
-   - Account for uneven distribution if necessary
-
-3. **Tracking Weekly Spending**:
-   - Filter transactions by date range for current week
-   - Sum amounts by category
+3. **Polish & Optimization**:
+   - Loading states
+   - Error handling
+   - Performance improvements
+   - Mobile responsiveness
 
 ## Best Practices
 
-1. **Performance**:
-   - Use computed properties for derived data
-   - Implement efficient filtering and sorting
+1. **Component Design**:
+   - Keep components focused
+   - Use TypeScript interfaces
+   - Implement proper loading states
+   - Handle edge cases
 
-2. **Accessibility**:
-   - Provide meaningful labels for all interactive elements
-   - Ensure sufficient color contrast
-   - Support keyboard navigation
+2. **State Management**:
+   - Use computed properties
+   - Implement proper reactivity
+   - Handle loading states
+   - Manage errors effectively
 
 3. **User Experience**:
-   - Clear visual feedback for actions
-   - Smooth transitions between states
-   - Helpful empty states
+   - Clear loading indicators
+   - Helpful error messages
+   - Smooth transitions
+   - Responsive design
 
-## Testing Considerations
+## Testing Guidelines
 
-1. **Data Scenarios**:
-   - Test with various budget configurations
-   - Verify calculation accuracy
-   - Check edge cases (zero budget, over-budget)
+1. **Component Testing**:
+   - Test loading states
+   - Verify calculations
+   - Check error handling
+   - Validate user interactions
 
-2. **UI Testing**:
-   - Verify responsive behavior
-   - Test across different screen sizes
-   - Validate all interactive elements
+2. **Integration Testing**:
+   - Test data flow
+   - Verify state management
+   - Check navigation
+   - Validate API integration
 
-## Future Enhancements
+## Documentation Updates
 
-1. **Custom Date Range Selection**:
-   - Allow users to select specific weeks or date ranges
-
-2. **Spending Trends**:
-   - Show week-over-week comparisons
-   - Visualize spending patterns over time
-
-3. **Budget Adjustments**:
-   - Allow users to adjust weekly allocations
-   - Provide suggested reallocations based on spending patterns
-
-4. **Export & Sharing**:
-   - Enable exporting weekly reports
-   - Share insights with others
-
-## Conclusion
-
-The Weekly View is the core value proposition of WeekNab. By breaking down monthly budgets into weekly insights, users can make more timely adjustments to their spending and stay on track with their financial goals.
-
-This implementation guide provides a foundation for integrating this feature into the WeekNab application. Adjust as needed to match your specific project requirements and design patterns.
+Keep documentation updated with:
+1. New features and changes
+2. Implementation details
+3. Testing requirements
+4. Best practices

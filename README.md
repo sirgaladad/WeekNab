@@ -2,6 +2,24 @@
 
 A modern Vue.js application for weekly YNAB budget management with a beautiful dark theme interface.
 
+## 🎯 Current Status
+
+### Implemented Features
+- Weekly budget overview with total/spent/remaining visualization
+- Category spending tracking with progress bars
+- Category filters (All, Over Budget, Under Budget)
+- Transaction previews within categories
+- YNAB token authentication and validation
+- Modern dark theme UI
+- Responsive mobile-first design
+
+### In Development
+- Enhanced category management
+- Weekly insights section
+- Theme toggle (dark/light)
+- Additional demo data
+- Loading state improvements
+
 ## 👨‍💻 Development
 
 Developed by Corey Boelkens at [Cobobots.com](https://cobobots.com). WeekNab is one of many innovative products from Cobobots.com.
@@ -45,27 +63,20 @@ weeknab/
 │   ├── components/
 │   │   ├── auth/
 │   │   │   └── TokenLogin.vue       # YNAB authentication
-│   │   ├── budget/
-│   │   │   └── WeeklyView.vue       # Weekly budget display
-│   │   ├── common/
-│   │   │   ├── Layout.vue           # App layout with theme toggle
-│   │   │   ├── Footer.vue           # Site footer with social links
-│   │   │   └── SocialShare.vue      # Social sharing component
-│   │   └── home/
-│   │       └── KeyFeatures.vue      # Home page features grid
+│   │   ├── dashboard/
+│   │   │   └── WeeklyDashboard.vue  # Weekly budget display
+│   │   └── common/
+│   │       └── Layout.vue           # App layout
 │   ├── views/
 │   │   ├── HomeView.vue             # Landing page
-│   │   ├── BudgetsView.vue          # Budgets dashboard
-│   │   ├── BudgetDetailView.vue     # Single budget view
-│   │   ├── PrivacyPolicy.vue        # Privacy policy
-│   │   └── TermsOfUse.vue          # Terms of use
+│   │   ├── DashboardView.vue        # Main dashboard
+│   │   └── DemoView.vue            # Demo view
 │   ├── services/
 │   │   ├── auth.service.ts         # Authentication handling
-│   │   └── ynab.service.ts         # YNAB API integration
-│   ├── stores/
-│   │   └── budget.store.ts         # Pinia store for budget state
-│   └── types/
-│       └── ynab.types.ts           # TypeScript definitions
+│   │   ├── ynab.service.ts         # YNAB API integration
+│   │   └── demo-data.service.ts    # Demo data service
+│   └── stores/
+│       └── auth.ts                 # Authentication store
 ```
 
 ## 🔧 Technology Stack
@@ -79,20 +90,23 @@ weeknab/
 
 ## 🎯 Key Features
 
-1. **Weekly Budget View**
+1. **Weekly Budget Dashboard**
    - Break down monthly budgets into weeks
    - Track spending patterns
    - Visual progress indicators
+   - Category filtering and management
 
-2. **Dark/Light Theme**
-   - System preference detection
-   - Manual toggle option
-   - Consistent styling
+2. **Category Management**
+   - Filter by budget status
+   - Transaction previews
+   - Progress visualization
+   - Over-budget indicators
 
-3. **Social Integration**
-   - Share with friends
-   - Social media links
-   - Community engagement
+3. **Weekly Insights**
+   - Spending analysis
+   - Budget progress
+   - Goal tracking
+   - Actionable recommendations
 
 4. **Responsive Design**
    - Mobile-first approach
@@ -111,8 +125,7 @@ weeknab/
 1. Fork the repository
 2. Create feature branch
 3. Make changes
-4. Write tests
-5. Submit PR
+4. Submit PR
 
 ## 📝 License
 
@@ -133,18 +146,12 @@ npm run test:unit
 
 # Run E2E tests
 npm run test:e2e
-
-# Run all tests with coverage
-npm run test
 ```
 
-## 📘 Development Journal
+## 📘 Development Notes
 
-See [LEARNING.md](./docs/LEARNING.md) for:
-- Development decisions
-- Problem solutions
-- Learning outcomes
-- Best practices
+See [LEARNING.md](./docs/LEARNING.md) for development decisions and learning outcomes.
+See [implementation-guide.txt](./docs/implementation-guide.txt) for detailed implementation details.
 
 ## 🔄 Development Process
 

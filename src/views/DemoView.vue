@@ -1,7 +1,7 @@
 <template>
   <div class="demo">
     <div class="demo-header">
-      <h1>WeekNab Demo</h1>
+      <h1>Weekly Dashboard</h1>
       <div class="auth-actions">
         <button class="primary-button" @click="navigateToLogin">
           Connect Your YNAB Account
