@@ -179,4 +179,83 @@ warning: in the working copy of 'src/views/HomeView.vue', LF will be replaced by
        <!-- Weekly Overview -->[m
        <section class="section">[m
          <h2>Weekly Overview</h2>[m
-[31m-        <p class="coming-soon">Weekly budget breakdown coming so
+[31m-        <p class="coming-soon">Weekly budget breakdown coming soon!</p>[m
+[32m+[m[32m        <p class="coming-soon">[m
+[32m+[m[32m          Weekly budget breakdown coming soon![m
+[32m+[m[32m        </p>[m
+       </section>[m
+ [m
+       <!-- Categories -->[m
+       <section class="section">[m
+         <h2>Categories</h2>[m
+         <div class="categories">[m
+[31m-          <div v-for="group in categories" :key="group.id" class="category-group">[m
+[32m+[m[32m          <div[m
+[32m+[m[32m            v-for="group in categories"[m
+[32m+[m[32m            :key="group.id"[m
+[32m+[m[32m            class="category-group"[m
+[32m+[m[32m          >[m
+             <h3>{{ group.name }}</h3>[m
+             <div class="category-list">[m
+[31m-              <div v-for="category in group.categories || []" :key="category.id" class="category-item">[m
+[32m+[m[32m              <div[m
+[32m+[m[32m                v-for="category in group.categories || []"[m
+[32m+[m[32m                :key="category.id"[m
+[32m+[m[32m                class="category-item"[m
+[32m+[m[32m              >[m
+                 <div class="category-info">[m
+                   <span class="category-name">{{ category.name }}</span>[m
+[31m-                  <span class="category-balance" :class="{ negative: category.balance < 0 }">[m
+[32m+[m[32m                  <span[m
+[32m+[m[32m                    class="category-balance"[m
+[32m+[m[32m                    :class="{ negative: category.balance < 0 }"[m
+[32m+[m[32m                  >[m
+                     {{ formatCurrency(category.balance) }}[m
+                   </span>[m
+                 </div>[m
+[36m@@ -41,7 +66,7 @@[m
+                     class="progress" [m
+                     :style="{ width: `${Math.min(100, (category.activity / (category.budgeted || 1)) * 100)}%` }"[m
+                     :class="{ warning: category.balance < 0 }"[m
+[31m-                  ></div>[m
+[32m+[m[32m                  />[m
+                 </div>[m
+               </div>[m
+             </div>[m
+[36m@@ -53,10 +78,17 @@[m
+       <section class="section">[m
+         <h2>Recent Transactions</h2>[m
+         <div class="transactions">[m
+[31m-          <div v-for="transaction in recentTransactions" :key="transaction.id" class="transaction-item">[m
+[32m+[m[32m          <div[m
+[32m+[m[32m            v-for="transaction in recentTransactions"[m
+[32m+[m[32m            :key="transaction.id"[m
+[32m+[m[32m            class="transaction-item"[m
+[32m+[m[32m          >[m
+             <div class="transaction-info">[m
+               <span class="transaction-payee">{{ transaction.payee_name || 'Unknown Payee' }}</span>[m
+[31m-              <span class="transaction-amount" :class="{ negative: transaction.amount < 0 }">[m
+[32m+[m[32m              <span[m
+[32m+[m[32m                class="transaction-amount"[m
+[32m+[m[32m                :class="{ negative: transaction.amount < 0 }"[m
+[32m+[m[32m              >[m
+                 {{ formatCurrency(transaction.amount) }}[m
+               </span>[m
+             </div>[m
+[1mdiff --git a/src/views/HomeView.vue b/src/views/HomeView.vue[m
+[1mindex bc31d74..a3fd689 100644[m
+[1m--- a/src/views/HomeView.vue[m
+[1m+++ b/src/views/HomeView.vue[m
+[36m@@ -23,7 +23,11 @@[m
+         </div>[m
+         <p class="token-info">[m
+           You'll need a YNAB Personal Access Token to get started. [m
+[31m-          <a href="https://app.ynab.com/settings/developer" target="_blank" rel="noopener">[m
+[32m+[m[32m          <a[m
+[32m+[m[32m            href="https://app.ynab.com/settings/developer"[m
+[32m+[m[32m            target="_blank"[m
+[32m+[m[32m            rel="noopener"[m
+[32m+[m[32m          >[m
+             Get your token here[m
+           </a>[m
+         </p>[m
