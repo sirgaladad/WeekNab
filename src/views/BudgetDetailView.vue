@@ -1,38 +1,63 @@
 <template>
   <div class="budget-detail">
     <div class="header">
-      <button class="back-button" @click="router.back()">
+      <button
+        class="back-button"
+        @click="router.back()"
+      >
         ← Back to Budgets
       </button>
       <h1>{{ budget?.name || 'Loading...' }}</h1>
     </div>
 
-    <div v-if="loading" class="loading">
+    <div
+      v-if="loading"
+      class="loading"
+    >
       Loading budget details...
     </div>
 
-    <div v-else-if="error" class="error">
+    <div
+      v-else-if="error"
+      class="error"
+    >
       {{ error }}
     </div>
 
-    <div v-else class="budget-content">
+    <div
+      v-else
+      class="budget-content"
+    >
       <!-- Weekly Overview -->
       <section class="section">
         <h2>Weekly Overview</h2>
-        <p class="coming-soon">Weekly budget breakdown coming soon!</p>
+        <p class="coming-soon">
+          Weekly budget breakdown coming soon!
+        </p>
       </section>
 
       <!-- Categories -->
       <section class="section">
         <h2>Categories</h2>
         <div class="categories">
-          <div v-for="group in categories" :key="group.id" class="category-group">
+          <div
+            v-for="group in categories"
+            :key="group.id"
+            class="category-group"
+          >
             <h3>{{ group.name }}</h3>
             <div class="category-list">
-              <div v-for="category in group.categories || []" :key="category.id" class="category-item">
+              <div
+                v-for="category in group.categories || []"
+                :key="category.id"
+                class="category-item"
+              >
                 <div class="category-info">
                   <span class="category-name">{{ category.name }}</span>
-                  <span class="category-balance" :class="{ negative: category.balance < 0 }">
+                  <span
+                    class="category-balance"
+                    :class="{ negative: category.balance < 0 }"
+                  >
                     {{ formatCurrency(category.balance) }}
                   </span>
                 </div>
@@ -41,7 +66,7 @@
                     class="progress" 
                     :style="{ width: `${Math.min(100, (category.activity / (category.budgeted || 1)) * 100)}%` }"
                     :class="{ warning: category.balance < 0 }"
-                  ></div>
+                  />
                 </div>
               </div>
             </div>
@@ -53,10 +78,17 @@
       <section class="section">
         <h2>Recent Transactions</h2>
         <div class="transactions">
-          <div v-for="transaction in recentTransactions" :key="transaction.id" class="transaction-item">
+          <div
+            v-for="transaction in recentTransactions"
+            :key="transaction.id"
+            class="transaction-item"
+          >
             <div class="transaction-info">
               <span class="transaction-payee">{{ transaction.payee_name || 'Unknown Payee' }}</span>
-              <span class="transaction-amount" :class="{ negative: transaction.amount < 0 }">
+              <span
+                class="transaction-amount"
+                :class="{ negative: transaction.amount < 0 }"
+              >
                 {{ formatCurrency(transaction.amount) }}
               </span>
             </div>

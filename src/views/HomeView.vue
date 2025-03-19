@@ -23,7 +23,11 @@
         </div>
         <p class="token-info">
           You'll need a YNAB Personal Access Token to get started. 
-          <a href="https://app.ynab.com/settings/developer" target="_blank" rel="noopener">
+          <a
+            href="https://app.ynab.com/settings/developer"
+            target="_blank"
+            rel="noopener"
+          >
             Get your token here
           </a>
         </p>

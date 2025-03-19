@@ -1,0 +1,182 @@
+warning: in the working copy of 'src/components/auth/TokenLogin.vue', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/components/common/Footer.vue', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/components/common/Layout.vue', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/views/BudgetDetailView.vue', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/views/HomeView.vue', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/src/components/auth/TokenLogin.vue b/src/components/auth/TokenLogin.vue[m
+[1mindex eb04956..f876daf 100644[m
+[1m--- a/src/components/auth/TokenLogin.vue[m
+[1m+++ b/src/components/auth/TokenLogin.vue[m
+[36m@@ -16,7 +16,10 @@[m
+       </ol>[m
+     </div>[m
+ [m
+[31m-    <form @submit.prevent="handleSubmit" class="token-form">[m
+[32m+[m[32m    <form[m
+[32m+[m[32m      class="token-form"[m
+[32m+[m[32m      @submit.prevent="handleSubmit"[m
+[32m+[m[32m    >[m
+       <div class="form-group">[m
+         <label for="token">Personal Access Token</label>[m
+         <input[m
+[36m@@ -26,7 +29,10 @@[m
+           placeholder="Enter your YNAB token"[m
+           :class="{ 'error': showError }"[m
+         >[m
+[31m-        <span v-if="showError" class="error-message">[m
+[32m+[m[32m        <span[m
+[32m+[m[32m          v-if="showError"[m
+[32m+[m[32m          class="error-message"[m
+[32m+[m[32m        >[m
+           {{ errorMessage }}[m
+         </span>[m
+       </div>[m
+[1mdiff --git a/src/components/common/Footer.vue b/src/components/common/Footer.vue[m
+[1mindex 5c8d7bc..912344f 100644[m
+[1m--- a/src/components/common/Footer.vue[m
+[1m+++ b/src/components/common/Footer.vue[m
+[36m@@ -5,10 +5,16 @@[m
+         <div class="footer-brand">[m
+           <h3>{{ companyInfo.name }}</h3>[m
+           <p>{{ companyInfo.slogan }}</p>[m
+[31m-          <p class="copyright">© {{ currentYear }} {{ companyInfo.name }}. All rights reserved.</p>[m
+[32m+[m[32m          <p class="copyright">[m
+[32m+[m[32m            © {{ currentYear }} {{ companyInfo.name }}. All rights reserved.[m
+[32m+[m[32m          </p>[m
+           <p class="developer-info">[m
+             Developed by {{ companyInfo.developer.name }} at [m
+[31m-            <a :href="companyInfo.developer.url" target="_blank" rel="noopener">{{ companyInfo.developer.company }}</a>[m
+[32m+[m[32m            <a[m
+[32m+[m[32m              :href="companyInfo.developer.url"[m
+[32m+[m[32m              target="_blank"[m
+[32m+[m[32m              rel="noopener"[m
+[32m+[m[32m            >{{ companyInfo.developer.company }}</a>[m
+           </p>[m
+         </div>[m
+         [m
+[36m@@ -58,7 +64,9 @@[m
+       [m
+       <div class="footer-bottom">[m
+         <p>{{ companyInfo.disclaimer }}</p>[m
+[31m-        <p class="cobobots-note">{{ companyInfo.tagline }}</p>[m
+[32m+[m[32m        <p class="cobobots-note">[m
+[32m+[m[32m          {{ companyInfo.tagline }}[m
+[32m+[m[32m        </p>[m
+       </div>[m
+     </div>[m
+   </footer>[m
+[1mdiff --git a/src/components/common/Layout.vue b/src/components/common/Layout.vue[m
+[1mindex a5940cb..f1eb5e4 100644[m
+[1m--- a/src/components/common/Layout.vue[m
+[1m+++ b/src/components/common/Layout.vue[m
+[36m@@ -12,15 +12,18 @@[m
+         <!-- Mobile Menu Button -->[m
+         <button [m
+           class="mobile-menu-btn"[m
+[31m-          @click="isMenuOpen = !isMenuOpen"[m
+           :aria-expanded="isMenuOpen"[m
+           aria-label="Toggle menu"[m
+[32m+[m[32m          @click="isMenuOpen = !isMenuOpen"[m
+         >[m
+           <span class="sr-only">Menu</span>[m
+[31m-          <div class="hamburger" :class="{ 'is-active': isMenuOpen }">[m
+[31m-            <span></span>[m
+[31m-            <span></span>[m
+[31m-            <span></span>[m
+[32m+[m[32m          <div[m
+[32m+[m[32m            class="hamburger"[m
+[32m+[m[32m            :class="{ 'is-active': isMenuOpen }"[m
+[32m+[m[32m          >[m
+[32m+[m[32m            <span />[m
+[32m+[m[32m            <span />[m
+[32m+[m[32m            <span />[m
+           </div>[m
+         </button>[m
+ [m
+[36m@@ -44,15 +47,37 @@[m
+           </router-link>[m
+           <button[m
+             class="theme-toggle"[m
+[31m-            @click="toggleTheme"[m
+             :aria-label="isDark ? 'Switch to light theme' : 'Switch to dark theme'"[m
+[32m+[m[32m            @click="toggleTheme"[m
+           >[m
+[31m-            <svg v-if="isDark" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">[m
+[31m-              <circle cx="12" cy="12" r="5"/>[m
+[31m-              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>[m
+[32m+[m[32m            <svg[m
+[32m+[m[32m              v-if="isDark"[m
+[32m+[m[32m              xmlns="http://www.w3.org/2000/svg"[m
+[32m+[m[32m              width="20"[m
+[32m+[m[32m              height="20"[m
+[32m+[m[32m              viewBox="0 0 24 24"[m
+[32m+[m[32m              fill="none"[m
+[32m+[m[32m              stroke="currentColor"[m
+[32m+[m[32m              stroke-width="2"[m
+[32m+[m[32m            >[m
+[32m+[m[32m              <circle[m
+[32m+[m[32m                cx="12"[m
+[32m+[m[32m                cy="12"[m
+[32m+[m[32m                r="5"[m
+[32m+[m[32m              />[m
+[32m+[m[32m              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />[m
+             </svg>[m
+[31m-            <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">[m
+[31m-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>[m
+[32m+[m[32m            <svg[m
+[32m+[m[32m              v-else[m
+[32m+[m[32m              xmlns="http://www.w3.org/2000/svg"[m
+[32m+[m[32m              width="20"[m
+[32m+[m[32m              height="20"[m
+[32m+[m[32m              viewBox="0 0 24 24"[m
+[32m+[m[32m              fill="none"[m
+[32m+[m[32m              stroke="currentColor"[m
+[32m+[m[32m              stroke-width="2"[m
+[32m+[m[32m            >[m
+[32m+[m[32m              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />[m
+             </svg>[m
+           </button>[m
+         </div>[m
+[1mdiff --git a/src/views/BudgetDetailView.vue b/src/views/BudgetDetailView.vue[m
+[1mindex 96377c5..c8e3850 100644[m
+[1m--- a/src/views/BudgetDetailView.vue[m
+[1m+++ b/src/views/BudgetDetailView.vue[m
+[36m@@ -1,38 +1,63 @@[m
+ <template>[m
+   <div class="budget-detail">[m
+     <div class="header">[m
+[31m-      <button class="back-button" @click="router.back()">[m
+[32m+[m[32m      <button[m
+[32m+[m[32m        class="back-button"[m
+[32m+[m[32m        @click="router.back()"[m
+[32m+[m[32m      >[m
+         ← Back to Budgets[m
+       </button>[m
+       <h1>{{ budget?.name || 'Loading...' }}</h1>[m
+     </div>[m
+ [m
+[31m-    <div v-if="loading" class="loading">[m
+[32m+[m[32m    <div[m
+[32m+[m[32m      v-if="loading"[m
+[32m+[m[32m      class="loading"[m
+[32m+[m[32m    >[m
+       Loading budget details...[m
+     </div>[m
+ [m
+[31m-    <div v-else-if="error" class="error">[m
+[32m+[m[32m    <div[m
+[32m+[m[32m      v-else-if="error"[m
+[32m+[m[32m      class="error"[m
+[32m+[m[32m    >[m
+       {{ error }}[m
+     </div>[m
+ [m
+[31m-    <div v-else class="budget-content">[m
+[32m+[m[32m    <div[m
+[32m+[m[32m      v-else[m
+[32m+[m[32m      class="budget-content"[m
+[32m+[m[32m    >[m
+       <!-- Weekly Overview -->[m
+       <section class="section">[m
+         <h2>Weekly Overview</h2>[m
+[31m-        <p class="coming-soon">Weekly budget breakdown coming so

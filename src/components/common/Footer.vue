@@ -5,10 +5,16 @@
         <div class="footer-brand">
           <h3>{{ companyInfo.name }}</h3>
           <p>{{ companyInfo.slogan }}</p>
-          <p class="copyright">© {{ currentYear }} {{ companyInfo.name }}. All rights reserved.</p>
+          <p class="copyright">
+            © {{ currentYear }} {{ companyInfo.name }}. All rights reserved.
+          </p>
           <p class="developer-info">
             Developed by {{ companyInfo.developer.name }} at 
-            <a :href="companyInfo.developer.url" target="_blank" rel="noopener">{{ companyInfo.developer.company }}</a>
+            <a
+              :href="companyInfo.developer.url"
+              target="_blank"
+              rel="noopener"
+            >{{ companyInfo.developer.company }}</a>
           </p>
         </div>
         
@@ -58,7 +64,9 @@
       
       <div class="footer-bottom">
         <p>{{ companyInfo.disclaimer }}</p>
-        <p class="cobobots-note">{{ companyInfo.tagline }}</p>
+        <p class="cobobots-note">
+          {{ companyInfo.tagline }}
+        </p>
       </div>
     </div>
   </footer>

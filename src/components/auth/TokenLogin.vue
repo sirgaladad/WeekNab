@@ -16,7 +16,10 @@
       </ol>
     </div>
 
-    <form @submit.prevent="handleSubmit" class="token-form">
+    <form
+      class="token-form"
+      @submit.prevent="handleSubmit"
+    >
       <div class="form-group">
         <label for="token">Personal Access Token</label>
         <input
@@ -26,7 +29,10 @@
           placeholder="Enter your YNAB token"
           :class="{ 'error': showError }"
         >
-        <span v-if="showError" class="error-message">
+        <span
+          v-if="showError"
+          class="error-message"
+        >
           {{ errorMessage }}
         </span>
       </div>
