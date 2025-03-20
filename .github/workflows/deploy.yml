@@ -26,8 +26,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
         
-      - name: Build (skip TypeScript checks)
-        run: npm run build:no-check
+      - name: Build (using simplified config)
+        run: npm run build:simple
         env:
           VITE_APP_MODE: production
           
