@@ -1,0 +1,141 @@
+<template>
+  <div class="insight-card">
+    <div class="insight-header">
+      <div class="icon-wrapper">
+        <slot name="icon"></slot>
+      </div>
+      <div class="tag">{{ category }}</div>
+    </div>
+    
+    <h3 class="insight-title">{{ title }}</h3>
+    <p class="insight-description">{{ description }}</p>
+    
+    <div class="insight-metrics">
+      <div :class="['amount', amountClass]">{{ formattedAmount }}</div>
+      <div :class="['change', changeClass]" v-if="showChange">
+        {{ changePercentage }} vs last week
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'InsightCard',
+  props: {
+    title: {
+      type: String,
+      required: true
+    },
+    description: {
+      type: String,
+      required: true
+    },
+    amount: {
+      type: Number,
+      required: true
+    },
+    changePercentage: {
+      type: String,
+      default: ''
+    },
+    category: {
+      type: String,
+      required: true
+    },
+    type: {
+      type: String,
+      default: 'neutral',
+      validator: (value) => ['positive', 'negative', 'neutral'].includes(value)
+    }
+  },
+  computed: {
+    formattedAmount() {
+      const prefix = this.amount > 0 ? '+' : '';
+      return `${prefix}$${Math.abs(this.amount).toFixed(2)}`;
+    },
+    amountClass() {
+      return this.type;
+    },
+    changeClass() {
+      return this.type;
+    },
+    showChange() {
+      return this.changePercentage !== '';
+    }
+  }
+}
+</script>
+
+<style scoped>
+.insight-card {
+  background-color: #1e2128;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.insight-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.tag {
+  background-color: #2a2f3a;
+  border-radius: 16px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: #ffffff;
+}
+
+.insight-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #ffffff;
+}
+
+.insight-description {
+  font-size: 14px;
+  color: #a0a0b0;
+  margin: 0 0 16px 0;
+}
+
+.insight-metrics {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.amount {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.amount.positive {
+  color: #2ecc71;
+}
+
+.amount.negative {
+  color: #e74c3c;
+}
+
+.change {
+  font-size: 12px;
+}
+
+.change.positive {
+  color: #2ecc71;
+}
+
+.change.negative {
+  color: #e74c3c;
+}
+</style>

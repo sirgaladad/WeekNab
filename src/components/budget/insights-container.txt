@@ -1,0 +1,333 @@
+<template>
+  <div class="insights-container">
+    <h1 class="page-title">Insights</h1>
+    
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+      <button 
+        v-for="tab in tabs" 
+        :key="tab.id"
+        :class="['tab-button', { active: activeTab === tab.id }]"
+        @click="activeTab = tab.id"
+      >
+        {{ tab.label }}
+      </button>
+    </div>
+
+    <!-- Spending Trends Section -->
+    <div v-if="activeTab === 'all' || activeTab === 'savings'">
+      <div v-for="trend in spendingTrends" :key="trend.id" class="insight-section">
+        <insight-card
+          :title="trend.title"
+          :description="trend.description"
+          :amount="trend.amount"
+          :category="trend.category"
+          :type="trend.type"
+        >
+          <template #icon>
+            <i class="trend-icon" :class="trend.iconClass"></i>
+          </template>
+        </insight-card>
+      </div>
+    </div>
+
+    <!-- Budget Alerts Section -->
+    <div v-if="activeTab === 'all' || activeTab === 'alerts'">
+      <div v-for="alert in budgetAlerts" :key="alert.id" class="insight-section">
+        <insight-card
+          :title="alert.title"
+          :description="alert.description"
+          :amount="alert.amount"
+          :category="alert.category"
+          :type="alert.type"
+        >
+          <template #icon>
+            <i class="alert-icon" :class="alert.iconClass"></i>
+          </template>
+        </insight-card>
+      </div>
+    </div>
+
+    <!-- Savings Opportunity Section -->
+    <div v-if="activeTab === 'all' || activeTab === 'savings'">
+      <div v-for="opportunity in savingsOpportunities" :key="opportunity.id" class="insight-section">
+        <insight-card
+          :title="opportunity.title"
+          :description="opportunity.description"
+          :amount="opportunity.amount"
+          :category="opportunity.category"
+          :type="opportunity.type"
+        >
+          <template #icon>
+            <i class="opportunity-icon" :class="opportunity.iconClass"></i>
+          </template>
+        </insight-card>
+      </div>
+    </div>
+
+    <!-- Daily Spending Section -->
+    <div v-if="activeTab === 'all'" class="daily-spending-section">
+      <h2 class="section-title">Daily Spending</h2>
+      <div class="chart-container">
+        <div class="chart">
+          <div 
+            v-for="(day, index) in dailySpending" 
+            :key="index"
+            class="bar"
+            :style="{height: `${(day.amount / maxDailySpending) * 100}%`}"
+          ></div>
+        </div>
+        <div class="chart-labels">
+          <span v-for="(day, index) in dailySpending" :key="index">{{ day.day }}</span>
+        </div>
+      </div>
+      <p class="average-spending">Average daily spend: ${{ averageDailySpend }}</p>
+    </div>
+
+    <!-- Goal Progress Section -->
+    <div v-if="activeTab === 'all'" class="goal-progress-section">
+      <h2 class="section-title">Goal Progress</h2>
+      <div class="goal-card">
+        <h3 class="goal-title">Monthly Savings Goal</h3>
+        <div class="goal-metrics">
+          <span class="goal-amount">+${{ weeklyGoalProgress }} this week</span>
+        </div>
+        <div class="goal-details">
+          <span class="goal-progress">${{ currentProgress }} of ${{ goalTarget }}</span>
+          <span class="goal-percentage">{{ progressPercentage }}%</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar" :style="{width: `${progressPercentage}%`}"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import InsightCard from './InsightCard.vue';
+
+export default {
+  name: 'InsightsContainer',
+  components: {
+    InsightCard
+  },
+  data() {
+    return {
+      activeTab: 'all',
+      tabs: [
+        { id: 'all', label: 'All' },
+        { id: 'savings', label: 'Savings' },
+        { id: 'alerts', label: 'Alerts' }
+      ],
+      spendingTrends: [
+        {
+          id: 1,
+          title: 'Spending Trend',
+          description: 'You\'re spending less on groceries compared to last week.',
+          amount: 18.50,
+          category: 'Groceries',
+          type: 'positive',
+          iconClass: 'savings-icon'
+        }
+      ],
+      budgetAlerts: [
+        {
+          id: 1,
+          title: 'Budget Alert',
+          description: 'You\'ve exceeded your Dining Out budget for this week.',
+          amount: -15.00,
+          category: 'Dining Out',
+          type: 'negative',
+          iconClass: 'alert-icon'
+        }
+      ],
+      savingsOpportunities: [
+        {
+          id: 1,
+          title: 'Savings Opportunity',
+          description: 'Entertainment spending is 40% below your weekly average.',
+          amount: 30.00,
+          category: 'Entertainment',
+          type: 'positive',
+          iconClass: 'opportunity-icon'
+        }
+      ],
+      dailySpending: [
+        { day: 'M', amount: 55 },
+        { day: 'T', amount: 35 },
+        { day: 'W', amount: 75 },
+        { day: 'T', amount: 60 },
+        { day: 'F', amount: 0 },
+        { day: 'S', amount: 0 },
+        { day: 'S', amount: 0 }
+      ],
+      weeklyGoalProgress: 35,
+      currentProgress: 85,
+      goalTarget: 200
+    };
+  },
+  computed: {
+    maxDailySpending() {
+      return Math.max(...this.dailySpending.map(day => day.amount));
+    },
+    averageDailySpend() {
+      const activeDays = this.dailySpending.filter(day => day.amount > 0);
+      const total = activeDays.reduce((sum, day) => sum + day.amount, 0);
+      return (total / (activeDays.length || 1)).toFixed(2);
+    },
+    progressPercentage() {
+      return Math.round((this.currentProgress / this.goalTarget) * 100);
+    }
+  }
+};
+</script>
+
+<style scoped>
+.insights-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 24px 0;
+}
+
+.tab-navigation {
+  display: flex;
+  margin-bottom: 24px;
+  background-color: #1e2128;
+  border-radius: 20px;
+  padding: 4px;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  color: #a0a0b0;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-button.active {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 32px 0 16px 0;
+}
+
+.daily-spending-section {
+  margin-top: 32px;
+}
+
+.chart-container {
+  background-color: #1e2128;
+  border-radius: 12px;
+  padding: 24px;
+  height: 200px;
+  margin-bottom: 16px;
+}
+
+.chart {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 150px;
+}
+
+.bar {
+  width: 24px;
+  background-color: #2563eb;
+  border-radius: 6px 6px 0 0;
+  min-height: 4px;
+}
+
+.chart-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.chart-labels span {
+  width: 24px;
+  text-align: center;
+  font-size: 12px;
+  color: #a0a0b0;
+}
+
+.average-spending {
+  text-align: center;
+  font-size: 14px;
+  color: #a0a0b0;
+  margin: 8px 0;
+}
+
+.goal-progress-section {
+  margin-top: 32px;
+}
+
+.goal-card {
+  background-color: #1e2128;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.goal-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+
+.goal-metrics {
+  margin-bottom: 16px;
+}
+
+.goal-amount {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2ecc71;
+}
+
+.goal-details {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.goal-progress {
+  font-size: 14px;
+  color: #a0a0b0;
+}
+
+.goal-percentage {
+  font-size: 14px;
+  color: #a0a0b0;
+}
+
+.progress-bar-container {
+  height: 8px;
+  background-color: #2a2f3a;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #2ecc71;
+  border-radius: 4px;
+}
+</style>

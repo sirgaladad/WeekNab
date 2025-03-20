@@ -187,8 +187,8 @@
               </svg>
             </a>
           </div>
-        </div>
-      </div>
+    </div>
+  </div>
     </footer>
     <SocialShare 
       v-if="showShareModal"
