@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100">
+  <!-- Calendar Icon -->
+  <g fill="#FFFFFF">
+    <!-- Calendar Base -->
+    <rect x="10" y="10" width="80" height="80" rx="8" fill="none" stroke="#FFFFFF" stroke-width="4"/>
+    
+    <!-- Calendar Top Bar -->
+    <rect x="10" y="10" width="80" height="20" rx="8" fill="#FFFFFF"/>
+    
+    <!-- Calendar Hangers -->
+    <rect x="25" y="0" width="8" height="12" rx="4" fill="#FFFFFF"/>
+    <rect x="65" y="0" width="8" height="12" rx="4" fill="#FFFFFF"/>
+    
+    <!-- Dollar Sign -->
+    <text x="50" y="65" font-family="Arial, sans-serif" font-size="40" font-weight="bold" text-anchor="middle" fill="#FFFFFF">$</text>
+  </g>
+  
+  <!-- WeekNab Text -->
+  <text x="110" y="75" font-family="Arial, sans-serif" font-size="80" font-weight="600" fill="#FFFFFF">WeekNab</text>
+</svg> 

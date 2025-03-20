@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WeekNab - Weekly Budgeting for YNAB Users</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="index.js"></script>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">WeekNab</div>
+      <nav>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#roadmap">Roadmap</a></li>
+          <li><a href="https://github.com/sirgaladad/WeekNab" class="github-link" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero animate-on-load">
+    <div class="container">
+      <div class="hero-content">
+        <h1>Weekly Budgeting <span>Made Simple</span></h1>
+        <p>WeekNab transforms your YNAB monthly budget into actionable weekly insights, helping you make better day-to-day financial decisions.</p>
+        <div class="cta-buttons">
+          <a href="app/" class="cta-button primary">Try Demo</a>
+          <a href="#features" class="cta-button secondary">Learn More</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="images/dashboard-preview.svg" alt="WeekNab Dashboard Preview">
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="features animate-on-scroll">
+    <div class="container">
+      <h2>Features</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Weekly Dashboard</h3>
+          <p>See your budget broken down into weekly chunks, making it easier to plan your spending.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📈</div>
+          <h3>Daily Spending Chart</h3>
+          <p>Track your spending patterns day by day with visual indicators for spending thresholds.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏷️</div>
+          <h3>Category Management</h3>
+          <p>See all your budget categories with progress indicators and transaction details.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💰</div>
+          <h3>Savings Goals</h3>
+          <p>Track progress toward your monthly savings goals with clear visual feedback.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <h3>Weekly Insights</h3>
+          <p>Get personalized recommendations to improve your budget management.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔄</div>
+          <h3>YNAB Integration</h3>
+          <p>Seamlessly connect to your YNAB account to access your real budget data.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="about animate-on-scroll">
+    <div class="container">
+      <div class="about-content">
+        <h2>About WeekNab</h2>
+        <p>WeekNab was born from a simple realization: most of us live and spend on a weekly basis, but budget on a monthly one. This disconnect makes it hard to make good financial decisions day-to-day.</p>
+        <p>Our application bridges this gap by transforming your YNAB monthly budget into a weekly format, providing you with the insights you need to stay on track throughout the month.</p>
+        <p>Built with Vue.js and integrated with the YNAB API, WeekNab is designed to be a complementary tool for existing YNAB users who want more granular control over their weekly spending.</p>
+      </div>
+      <div class="tech-stack">
+        <h3>Technology Stack</h3>
+        <div class="tech-icons">
+          <div class="tech-icon">
+            <img src="images/vue-logo.svg" alt="Vue.js">
+            <span>Vue.js</span>
+          </div>
+          <div class="tech-icon">
+            <img src="images/typescript-logo.svg" alt="TypeScript">
+            <span>TypeScript</span>
+          </div>
+          <div class="tech-icon">
+            <img src="images/supabase-logo.svg" alt="Supabase">
+            <span>Supabase</span>
+          </div>
+          <div class="tech-icon">
+            <img src="images/ynab-logo.svg" alt="YNAB API">
+            <span>YNAB API</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="roadmap" class="roadmap animate-on-scroll">
+    <div class="container">
+      <h2>Project Roadmap</h2>
+      <div class="timeline">
+        <div class="timeline-item completed">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <h3>Phase 1: Component Architecture</h3>
+            <p>Creation of the core UI components and responsive layouts.</p>
+            <span class="timeline-status">Completed</span>
+          </div>
+        </div>
+        <div class="timeline-item current">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <h3>Phase 2: Data Layer</h3>
+            <p>Implementation of data services and persistence with Supabase.</p>
+            <span class="timeline-status">In Progress</span>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <h3>Phase 3: API Integration</h3>
+            <p>Connecting with YNAB API for real user data.</p>
+            <span class="timeline-status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <h3>Phase 4: Testing & Refinement</h3>
+            <p>Comprehensive testing and performance optimization.</p>
+            <span class="timeline-status">Planned</span>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <h3>Phase 5: Launch & Feedback</h3>
+            <p>Public release and gathering user feedback.</p>
+            <span class="timeline-status">Planned</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-logo">WeekNab</div>
+        <div class="footer-links">
+          <a href="#features">Features</a>
+          <a href="#about">About</a>
+          <a href="#roadmap">Roadmap</a>
+          <a href="https://github.com/sirgaladad/WeekNab" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 WeekNab. All rights reserved.</p>
+        <p>Not affiliated with YNAB (You Need A Budget).</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html> 

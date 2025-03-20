@@ -14,12 +14,24 @@ A modern Vue.js application for weekly YNAB budget management with a beautiful d
 - YNAB token authentication and validation
 - Modern dark theme UI with responsive design
 - Demo mode with realistic budget data
+- Enhanced data caching for improved performance
+- Robust error handling with retry logic
+- Support for split transactions and credit cards
+- Multi-month week handling
 
 ### In Development
 - Enhanced transaction details view
 - Theme toggle (dark/light)
 - Custom spending threshold configuration
 - Historical data comparison
+
+## 🌐 Project Website
+
+Check out our [GitHub Pages website](https://yourusername.github.io/WeekNab/) for more information about the project, features, and roadmap.
+
+## 📋 Project Plan
+
+The complete project plan with timeline, deliverables, and development phases is available in [PROJECT_PLAN.md](./docs/PROJECT_PLAN.md).
 
 ## 👨‍💻 Development
 
@@ -64,7 +76,8 @@ weeknab/
 │   ├── components/
 │   │   ├── auth/                    # Authentication components
 │   │   ├── dashboard/
-│   │   │   └── WeeklyDashboard.vue  # Weekly budget display
+│   │   │   ├── WeeklyDashboard.vue  # Weekly budget display
+│   │   │   └── sections/            # Dashboard section components
 │   │   ├── insights/
 │   │   │   ├── InsightsContainer.vue # Insights section container
 │   │   │   └── InsightCard.vue      # Individual insight cards
@@ -75,16 +88,20 @@ weeknab/
 │   │   ├── DemoView.vue             # Demo view with sample data
 │   │   ├── BudgetsView.vue          # Budget selection
 │   │   ├── WeeklyBudgetView.vue     # Weekly budget view
-│   │   └── TransactionsView.vue     # Transactions list
+│   │   └── 404-page.vue             # Not found page
 │   ├── services/
 │   │   ├── auth.service.ts          # Authentication handling
 │   │   ├── ynab.service.ts          # YNAB API integration
 │   │   ├── ynab-weekly.service.ts   # Weekly budget processing
+│   │   ├── cache.service.ts         # Data caching service
 │   │   └── DemoDataService.ts       # Demo data provider
 │   ├── types/
 │   │   └── budget.ts                # Type definitions for budget data
 │   └── stores/
 │       └── auth.ts                  # Authentication store
+├── github-pages/                    # GitHub Pages website
+├── docs/                            # Project documentation
+└── .github/                         # GitHub configurations
 ```
 
 ## 🔧 Technology Stack
@@ -95,6 +112,7 @@ weeknab/
 - **Pinia** for state management
 - **Vue Router** for navigation
 - **YNAB API** for budget data
+- **Supabase** for backend services (coming soon)
 
 ## 🎯 Key Features
 
@@ -134,58 +152,55 @@ The application processes YNAB data to provide weekly insights:
    - YNAB monthly categories → Weekly budget allocation
    - Transaction data → Daily spending patterns
    - Category groups → Simplified category view
+   - Support for split transactions and credit cards
+   - Multi-month week handling
 
 2. **Weekly Calculation**:
    - Proportional budget allocation for partial weeks
    - Remaining days calculation
    - Dynamic date range handling
+   - Cached data for improved performance
+
+3. **Error Handling**:
+   - Automatic retry for failed requests
+   - Rate limit handling
+   - User-friendly error messages
+   - Fallback to demo data when needed
+
+## 📊 Development Phases
+
+1. **Phase 1: Component Architecture** (Completed)
+   - Creation of core UI components
+   - Responsive layout implementation
+   - Component hierarchy establishment
+
+2. **Phase 2: Data Layer** (In Progress)
+   - Data services implementation
+   - Supabase integration
+   - Caching mechanisms
+
+3. **Phase 3: API Integration** (Upcoming)
+   - YNAB API connection
+   - Authentication flow
+   - Data transformation
+
+4. **Phase 4: Testing & Refinement** (Upcoming)
+   - Unit and integration testing
+   - Performance optimization
+   - Accessibility improvements
+
+5. **Phase 5: Launch & Feedback** (Upcoming)
+   - Production deployment
+   - User documentation
+   - Feedback collection
 
 ## 📘 Development Documentation
 
-See [LEARNING.md](./docs/LEARNING.md) for development decisions and learning outcomes.
-See [DESIGN_SYSTEM.md](./docs/DESIGN_SYSTEM.md) for design system documentation.
-See [implementation-guide.txt](./docs/implementation-guide.txt) for detailed implementation details.
-
-## 🔄 Development Process
-
-1. **Component Development**
-   - Feature-based structure
-   - Composition API with TypeScript
-   - Responsive design implementation
-   - Progressive enhancement
-
-2. **Testing & Validation**
-   - Linting and type checking
-   - Component validation
-   - Responsive testing
-   - Edge case handling
-
-3. **Release Planning**
-   - Feature completeness verification
-   - Design consistency review
-   - Performance optimization
-   - Documentation updates
-
-## 🎯 Release v1.0 Focus
-
-1. **Core Dashboard Functionality**
-   - Weekly budget overview
-   - Category management
-   - Daily spending visualization
-   - Savings goal tracking
-   - Insights section
-
-2. **Design System Compliance**
-   - Component consistency
-   - Responsive behavior
-   - Accessibility standards
-   - Visual hierarchy
-
-3. **Data Integration**
-   - Demo data service
-   - YNAB API connection
-   - Data transformation
-   - Error handling
+- [PROJECT_PLAN.md](./docs/PROJECT_PLAN.md) - Detailed project plan and roadmap
+- [LEARNING.md](./docs/LEARNING.md) - Development decisions and learning outcomes
+- [DESIGN_SYSTEM.md](./docs/DESIGN_SYSTEM.md) - Design system documentation
+- [YNAB_DATA_INTEGRATION.md](./docs/YNAB_DATA_INTEGRATION.md) - YNAB integration details
+- [RELEASE_PLAN.md](./docs/RELEASE_PLAN.md) - Release planning and checklist
 
 ## 📝 License
 
@@ -193,6 +208,7 @@ MIT
 
 ## 🌐 Links
 
+- [Project Website](https://yourusername.github.io/WeekNab/)
 - [Cobobots.com](https://cobobots.com)
 - [YNAB Developer Portal](https://app.ynab.com/settings/developer)
 - [Privacy Policy](/privacy)
