@@ -18,6 +18,11 @@ import NavBar from './NavBar.vue'
 import Footer from './Footer.vue'
 
 const { isDark, toggleTheme } = useTheme()
+
+defineExpose({
+  isDark,
+  toggleTheme
+})
 </script>
 
 <style scoped>

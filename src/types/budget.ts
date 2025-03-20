@@ -34,11 +34,12 @@ export interface CategoryData {
   spent: number
   remaining: number
   percentageSpent: number
+  transactions?: Transaction[]
 }
 
 export interface DateRange {
-  start: Date | string
-  end: Date | string
+  start: Date
+  end: Date
 }
 
 export interface RecentActivity {
@@ -62,6 +63,8 @@ export interface WeeklyBudgetData {
   remainingBudget: number
   categories: CategoryData[]
   dailySpending: DailySpending[]
+  dateRange: DateRange
+  daysLeft: number
 }
 
 export type WeeklyBudgetDataResponse = WeeklyBudgetData 

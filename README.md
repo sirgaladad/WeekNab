@@ -6,19 +6,20 @@ A modern Vue.js application for weekly YNAB budget management with a beautiful d
 
 ### Implemented Features
 - Weekly budget overview with total/spent/remaining visualization
-- Category spending tracking with progress bars
+- Category spending tracking with progress bars and transaction previews
 - Category filters (All, Over Budget, Under Budget)
-- Transaction previews within categories
+- Daily spending chart with threshold visualization
+- Monthly savings goal tracking
+- Weekly insights section with actionable recommendations
 - YNAB token authentication and validation
-- Modern dark theme UI
-- Responsive mobile-first design
+- Modern dark theme UI with responsive design
+- Demo mode with realistic budget data
 
 ### In Development
-- Enhanced category management
-- Weekly insights section
+- Enhanced transaction details view
 - Theme toggle (dark/light)
-- Additional demo data
-- Loading state improvements
+- Custom spending threshold configuration
+- Historical data comparison
 
 ## 👨‍💻 Development
 
@@ -26,12 +27,12 @@ Developed by Corey Boelkens at [Cobobots.com](https://cobobots.com). WeekNab is 
 
 ## 🎨 Design Features
 
-- Modern dark theme UI with light mode toggle
-- Fully responsive design for all devices
+- Modern dark theme UI with component consistency
+- Fully responsive design with mobile-first approach
+- Interactive data visualizations with threshold indicators
+- Clear budget status indicators with color coding
 - Accessibility-focused components
-- Intuitive navigation and user flow
-- Social sharing integration
-- Weekly budget insights
+- Intuitive navigation with weekly date selection
 
 ## 🚀 Quick Start
 
@@ -61,22 +62,29 @@ npm run lint
 weeknab/
 ├── src/
 │   ├── components/
-│   │   ├── auth/
-│   │   │   └── TokenLogin.vue       # YNAB authentication
+│   │   ├── auth/                    # Authentication components
 │   │   ├── dashboard/
 │   │   │   └── WeeklyDashboard.vue  # Weekly budget display
-│   │   └── common/
-│   │       └── Layout.vue           # App layout
+│   │   ├── insights/
+│   │   │   ├── InsightsContainer.vue # Insights section container
+│   │   │   └── InsightCard.vue      # Individual insight cards
+│   │   └── common/                  # Shared components
 │   ├── views/
 │   │   ├── HomeView.vue             # Landing page
-│   │   ├── DashboardView.vue        # Main dashboard
-│   │   └── DemoView.vue            # Demo view
+│   │   ├── DashboardView.vue        # Main dashboard container
+│   │   ├── DemoView.vue             # Demo view with sample data
+│   │   ├── BudgetsView.vue          # Budget selection
+│   │   ├── WeeklyBudgetView.vue     # Weekly budget view
+│   │   └── TransactionsView.vue     # Transactions list
 │   ├── services/
-│   │   ├── auth.service.ts         # Authentication handling
-│   │   ├── ynab.service.ts         # YNAB API integration
-│   │   └── demo-data.service.ts    # Demo data service
+│   │   ├── auth.service.ts          # Authentication handling
+│   │   ├── ynab.service.ts          # YNAB API integration
+│   │   ├── ynab-weekly.service.ts   # Weekly budget processing
+│   │   └── DemoDataService.ts       # Demo data provider
+│   ├── types/
+│   │   └── budget.ts                # Type definitions for budget data
 │   └── stores/
-│       └── auth.ts                 # Authentication store
+│       └── auth.ts                  # Authentication store
 ```
 
 ## 🔧 Technology Stack
@@ -91,41 +99,93 @@ weeknab/
 ## 🎯 Key Features
 
 1. **Weekly Budget Dashboard**
-   - Break down monthly budgets into weeks
-   - Track spending patterns
-   - Visual progress indicators
-   - Category filtering and management
+   - Break down monthly budgets into week view
+   - Visual budget progress with status indicators
+   - Dynamic date navigation with days remaining
+   - Progressive budget visualization
 
 2. **Category Management**
-   - Filter by budget status
-   - Transaction previews
-   - Progress visualization
-   - Over-budget indicators
+   - Filter by budget status (All/Over/Under)
+   - Transaction previews within categories
+   - Progress visualization with color-coded indicators
+   - Show more/less categories with intuitive controls
 
-3. **Weekly Insights**
-   - Spending analysis
-   - Budget progress
-   - Goal tracking
-   - Actionable recommendations
+3. **Daily Spending Chart**
+   - Day-by-day spending visualization
+   - Threshold indicator for spending limits
+   - Color-coded indicators for over-threshold days
+   - Average daily spend calculation
 
-4. **Responsive Design**
-   - Mobile-first approach
-   - Tablet optimization
-   - Desktop enhancement
+4. **Monthly Savings Goal**
+   - Goal progress visualization
+   - Weekly contribution tracking
+   - Percentage complete indicator
 
-## 🔐 Privacy & Security
+5. **Weekly Insights**
+   - Spending analysis and recommendations
+   - Budget progress summaries
+   - Actionable suggestions for budget management
 
-- Client-side only processing
-- No server storage of YNAB tokens
-- Secure token handling
-- Clear privacy policy
+## 🌐 YNAB Data Integration
 
-## 🤝 Contributing
+The application processes YNAB data to provide weekly insights:
 
-1. Fork the repository
-2. Create feature branch
-3. Make changes
-4. Submit PR
+1. **Data Transformation**:
+   - YNAB monthly categories → Weekly budget allocation
+   - Transaction data → Daily spending patterns
+   - Category groups → Simplified category view
+
+2. **Weekly Calculation**:
+   - Proportional budget allocation for partial weeks
+   - Remaining days calculation
+   - Dynamic date range handling
+
+## 📘 Development Documentation
+
+See [LEARNING.md](./docs/LEARNING.md) for development decisions and learning outcomes.
+See [DESIGN_SYSTEM.md](./docs/DESIGN_SYSTEM.md) for design system documentation.
+See [implementation-guide.txt](./docs/implementation-guide.txt) for detailed implementation details.
+
+## 🔄 Development Process
+
+1. **Component Development**
+   - Feature-based structure
+   - Composition API with TypeScript
+   - Responsive design implementation
+   - Progressive enhancement
+
+2. **Testing & Validation**
+   - Linting and type checking
+   - Component validation
+   - Responsive testing
+   - Edge case handling
+
+3. **Release Planning**
+   - Feature completeness verification
+   - Design consistency review
+   - Performance optimization
+   - Documentation updates
+
+## 🎯 Release v1.0 Focus
+
+1. **Core Dashboard Functionality**
+   - Weekly budget overview
+   - Category management
+   - Daily spending visualization
+   - Savings goal tracking
+   - Insights section
+
+2. **Design System Compliance**
+   - Component consistency
+   - Responsive behavior
+   - Accessibility standards
+   - Visual hierarchy
+
+3. **Data Integration**
+   - Demo data service
+   - YNAB API connection
+   - Data transformation
+   - Error handling
 
 ## 📝 License
 
@@ -136,141 +196,4 @@ MIT
 - [Cobobots.com](https://cobobots.com)
 - [YNAB Developer Portal](https://app.ynab.com/settings/developer)
 - [Privacy Policy](/privacy)
-- [Terms of Use](/terms)
-
-## 🧪 Testing
-
-```bash
-# Run unit tests
-npm run test:unit
-
-# Run E2E tests
-npm run test:e2e
-```
-
-## 📘 Development Notes
-
-See [LEARNING.md](./docs/LEARNING.md) for development decisions and learning outcomes.
-See [implementation-guide.txt](./docs/implementation-guide.txt) for detailed implementation details.
-
-## 🔄 Development Process
-
-1. **Setup & Configuration**
-   - TypeScript configuration
-   - ESLint setup
-   - Vue 3 configuration
-   - Path aliases
-
-2. **Component Development**
-   - Feature-based structure
-   - Composition API usage
-   - Type-safe props
-   - Event handling
-
-3. **Testing & Validation**
-   - Linting checks
-   - Type checking
-   - Build validation
-   - Performance testing
-
-4. **Documentation**
-   - Code comments
-   - Component documentation
-   - Learning journal updates
-   - README maintenance
-
-## 🎯 Development Principles
-
-1. **Type Safety First**
-   - Use TypeScript
-   - Define interfaces for all data structures
-   - Strict type checking
-
-2. **Testing Strategy**
-   - Unit tests for business logic
-   - Component tests for UI
-   - E2E tests for critical paths
-
-3. **Code Organization**
-   - Feature-based structure
-   - Clear separation of concerns
-   - Reusable components
-
-4. **Performance**
-   - Lazy loading
-   - Code splitting
-   - Performance monitoring
-
-## 📊 YNAB Integration
-
-### Authentication
-- Personal Access Token approach
-- Secure token storage
-- Token validation
-
-### API Usage
-- Budget fetching
-- Transaction management
-- Error handling
-- Rate limiting compliance
-
-### Security Considerations
-- Client-side only processing
-- No server storage of tokens
-- Secure communication
-
-## 🔐 Privacy & Terms
-
-WeekNab takes privacy and security seriously:
-
-- No server-side storage of YNAB tokens
-- Local processing of budget data
-- Transparent data handling
-- Clear terms of service
-
-See our [Privacy Policy](/privacy-policy) and [Terms of Use](/terms-of-use) for more details.
-
-## 🌐 Sharing Features
-
-WeekNab includes social sharing capabilities:
-- Direct link sharing
-- Social media integration
-- Referral tracking
-- Community building
-
-## 🛠 Contributing
-
-1. Fork the repository
-2. Create feature branch
-3. Make changes
-4. Write tests
-5. Submit PR
-
-## 📝 License
-
-MIT
-
-## 🎨 Current Features
-
-- **Weekly Budget Management**
-  - Break down monthly budgets into weekly chunks
-  - Track spending patterns
-  - Visual progress indicators
-
-- **Modern UI/UX**
-  - Dark theme with modern design
-  - Responsive layout for all devices
-  - Intuitive navigation
-  - Beautiful animations and transitions
-
-- **Core Features**
-  1. Weekly Overview - See your budget broken down into weekly chunks
-  2. Budget Insights - Get intelligent recommendations
-  3. Category Analysis - Track spending categories
-  4. Transaction Feed - Review recent transactions
-
-- **Social Integration**
-  - Share functionality with major platforms
-  - Twitter, LinkedIn, and Facebook sharing
-  - Direct link sharing
-  - Community engagement 
+- [Terms of Use](/terms) 

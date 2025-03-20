@@ -1,276 +1,174 @@
 <template>
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-brand">
-          <h3>{{ companyInfo.name }}</h3>
-          <p>{{ companyInfo.slogan }}</p>
-          <p class="copyright">
-            © {{ currentYear }} {{ companyInfo.name }}. All rights reserved.
-          </p>
-          <p class="developer-info">
-            Developed by {{ companyInfo.developer.name }} at 
-            <a
-              :href="companyInfo.developer.url"
-              target="_blank"
-              rel="noopener"
-            >{{ companyInfo.developer.company }}</a>
-          </p>
-        </div>
-        
-        <div class="footer-links">
-          <div class="links-group">
-            <h4>Quick Links</h4>
-            <nav>
-              <router-link 
-                v-for="link in companyLinks" 
-                :key="link.url" 
-                :to="link.url"
-              >
-                {{ link.name }}
-              </router-link>
-            </nav>
-          </div>
-          
-          <div class="links-group">
-            <h4>Legal</h4>
-            <nav>
-              <router-link 
-                v-for="link in legalLinks" 
-                :key="link.url" 
-                :to="link.url"
-              >
-                {{ link.name }}
-              </router-link>
-            </nav>
-          </div>
-          
-          <div class="links-group">
-            <h4>Connect With Us</h4>
-            <div class="social-links">
-              <a 
-                v-for="link in socialLinks"
-                :key="link.name"
-                :href="link.url" 
-                target="_blank" 
-                rel="noopener" 
-                class="social-link"
-                :aria-label="link.ariaLabel"
-              >
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  width="24" 
-                  height="24" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  v-html="link.icon"
-                />
-              </a>
-            </div>
-          </div>
-        </div>
+  <footer class="app-footer">
+    <div class="footer-content">
+      <div class="footer-logo">
+        <h3>WeekNab</h3>
+        <p>A modern Vue.js application for weekly YNAB budget management</p>
       </div>
       
-      <div class="footer-bottom">
-        <p>{{ companyInfo.disclaimer }}</p>
-        <p class="cobobots-note">
-          {{ companyInfo.tagline }}
-        </p>
+      <div class="footer-links">
+        <div class="link-group">
+          <h4>Features</h4>
+          <ul>
+            <li><router-link to="/dashboard">Weekly Dashboard</router-link></li>
+            <li><router-link to="/insights">Budget Insights</router-link></li>
+            <li><router-link to="/categories">Category Management</router-link></li>
+          </ul>
+        </div>
+        
+        <div class="link-group">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="https://app.ynab.com/settings/developer" target="_blank">YNAB Developer</a></li>
+            <li><router-link to="/privacy">Privacy Policy</router-link></li>
+            <li><router-link to="/terms">Terms of Use</router-link></li>
+          </ul>
+        </div>
+        
+        <div class="link-group">
+          <h4>Social</h4>
+          <ul>
+            <li><a href="https://twitter.com" target="_blank">Twitter</a></li>
+            <li><a href="https://linkedin.com" target="_blank">LinkedIn</a></li>
+            <li><a href="https://facebook.com" target="_blank">Facebook</a></li>
+          </ul>
+        </div>
       </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; {{ currentYear }} Developed by <a href="https://cobobots.com" target="_blank">Corey Boelkens</a>. All rights reserved.</p>
+      <p>MIT License</p>
     </div>
   </footer>
 </template>
 
 <script setup lang="ts">
-import { socialLinks, companyLinks, companyInfo } from '@/config/social'
+import { computed } from 'vue'
 
-const currentYear = new Date().getFullYear()
+const currentYear = computed(() => new Date().getFullYear())
 
-const legalLinks = [
-  { name: 'Privacy Policy', url: '/privacy' },
-  { name: 'Terms of Service', url: '/terms' },
-  { name: 'Cookie Policy', url: '/cookies' }
-]
-</script>
-
-<script lang="ts">
-export default {
-  name: 'Footer'
-}
+defineExpose({
+  currentYear
+})
 </script>
 
 <style scoped>
-.footer {
-  background: var(--surface);
-  padding: 4rem 0 2rem;
-  border-top: 1px solid var(--border);
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
+.app-footer {
+  background: #1A1D23;
+  color: #B4B7C3;
+  padding: 3rem 2rem 1.5rem;
+  margin-top: 4rem;
+  border-top: 1px solid #2E303A;
 }
 
 .footer-content {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 4rem;
-  margin-bottom: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.footer-brand h3 {
+.footer-logo {
+  flex: 1;
+  min-width: 250px;
+}
+
+.footer-logo h3 {
+  color: #FFFFFF;
   font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: var(--text);
+  font-weight: 600;
+  margin-bottom: 0.75rem;
 }
 
-.footer-brand p {
-  color: var(--text-secondary);
-  margin-bottom: 1rem;
-}
-
-.copyright {
+.footer-logo p {
   font-size: 0.875rem;
+  line-height: 1.5;
+  max-width: 300px;
 }
 
 .footer-links {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 2rem;
 }
 
-.links-group h4 {
+.link-group {
+  min-width: 150px;
+}
+
+.link-group h4 {
+  color: #FFFFFF;
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: var(--text);
 }
 
-.links-group nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.links-group nav a {
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.links-group nav a:hover {
-  color: var(--primary);
-}
-
-.social-links {
-  display: flex;
-  gap: 1rem;
-}
-
-.social-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--background);
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  transition: all 0.2s ease;
-}
-
-.social-link:hover {
-  color: var(--primary);
-  border-color: var(--primary);
-  transform: translateY(-2px);
-}
-
-.social-link svg {
-  width: 20px;
-  height: 20px;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
+.link-group ul {
+  list-style: none;
   padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+  margin: 0;
 }
 
-.developer-info {
-  color: var(--text-secondary);
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
+.link-group li {
+  margin-bottom: 0.75rem;
 }
 
-.developer-info a {
-  color: var(--primary);
+.link-group a {
+  color: #B4B7C3;
   text-decoration: none;
+  font-size: 0.875rem;
   transition: color 0.2s ease;
 }
 
-.developer-info a:hover {
-  text-decoration: underline;
+.link-group a:hover {
+  color: #3B82F6;
 }
 
 .footer-bottom {
-  padding-top: 2rem;
-  border-top: 1px solid var(--border);
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #2E303A;
   text-align: center;
-  font-size: 0.875rem;
-  color: var(--text-secondary);
+  font-size: 0.8125rem;
 }
 
-.footer-bottom p {
-  margin-bottom: 0.5rem;
+.footer-bottom a {
+  color: #FFFFFF;
+  text-decoration: none;
 }
 
-.cobobots-note {
-  color: var(--text-secondary);
-  font-style: italic;
+.footer-bottom a:hover {
+  text-decoration: underline;
 }
 
 @media (max-width: 768px) {
-  .footer {
-    padding: 3rem 0 1.5rem;
+  .app-footer {
+    padding: 2rem 1rem 1rem;
   }
-
+  
   .footer-content {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     gap: 2rem;
   }
-
+  
+  .footer-logo {
+    text-align: center;
+    min-width: auto;
+  }
+  
+  .footer-logo p {
+    max-width: 100%;
+  }
+  
   .footer-links {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    justify-content: space-between;
   }
-
-  .social-links {
-    justify-content: center;
-  }
-
-  .footer-brand {
-    text-align: center;
-  }
-
-  .developer-info {
-    text-align: center;
-  }
-
-  .footer-bottom p {
-    margin-bottom: 0.75rem;
+  
+  .link-group {
+    min-width: 120px;
   }
 }
 </style> 

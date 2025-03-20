@@ -1,18 +1,52 @@
-import type { WeeklyBudgetData, CategoryData, DailySpending } from '@/types/budget'
+import type { WeeklyBudgetData, CategoryData, DailySpending, DateRange, Transaction } from '@/types/budget'
 
 export class DemoDataService {
   static async getWeeklyData(): Promise<WeeklyBudgetData> {
     // Simulated API response delay
     await new Promise(resolve => setTimeout(resolve, 500))
 
+    const categoryTransactions: Record<string, Transaction[]> = {
+      'Groceries': [
+        { id: 1, payee: 'Whole Foods', amount: 85.50, category: 'Groceries' },
+        { id: 2, payee: 'Trader Joes', amount: 45.25, category: 'Groceries' },
+        { id: 3, payee: 'Local Market', amount: 19.75, category: 'Groceries' }
+      ],
+      'Dining Out': [
+        { id: 4, payee: 'Pizza Restaurant', amount: 35.50, category: 'Dining Out' },
+        { id: 5, payee: 'Coffee Shop', amount: 15.75, category: 'Dining Out' },
+        { id: 6, payee: 'Sunday Brunch', amount: 48.75, category: 'Dining Out' }
+      ],
+      'Entertainment': [
+        { id: 7, payee: 'Movie Theater', amount: 30.50, category: 'Entertainment' },
+        { id: 8, payee: 'Bowling Alley', amount: 22.00, category: 'Entertainment' },
+        { id: 9, payee: 'Concert Tickets', amount: 75.00, category: 'Entertainment' }
+      ],
+      'Transportation': [
+        { id: 10, payee: 'Gas Station', amount: 45.75, category: 'Transportation' },
+        { id: 11, payee: 'Parking Garage', amount: 15.00, category: 'Transportation' },
+        { id: 12, payee: 'Uber', amount: 24.50, category: 'Transportation' }
+      ],
+      'Shopping': [
+        { id: 13, payee: 'Department Store', amount: 125.35, category: 'Shopping' },
+        { id: 14, payee: 'Online Retailer', amount: 67.89, category: 'Shopping' },
+        { id: 15, payee: 'Electronics Store', amount: 199.99, category: 'Shopping' }
+      ],
+      'Utilities': [
+        { id: 16, payee: 'Electric Company', amount: 85.42, category: 'Utilities' },
+        { id: 17, payee: 'Water Service', amount: 35.00, category: 'Utilities' },
+        { id: 18, payee: 'Internet Provider', amount: 65.99, category: 'Utilities' }
+      ]
+    }
+
     const categories: CategoryData[] = [
       {
         id: '1',
         name: 'Groceries',
         budgeted: 200,
-        spent: 150,
-        remaining: 50,
-        percentageSpent: 75
+        spent: 150.50,
+        remaining: 49.50,
+        percentageSpent: 75,
+        transactions: categoryTransactions['Groceries']
       },
       {
         id: '2',
@@ -20,18 +54,61 @@ export class DemoDataService {
         budgeted: 150,
         spent: 100,
         remaining: 50,
-        percentageSpent: 66.67
+        percentageSpent: 66.67,
+        transactions: categoryTransactions['Dining Out']
+      },
+      {
+        id: '3',
+        name: 'Entertainment',
+        budgeted: 100,
+        spent: 127.50,
+        remaining: -27.50,
+        percentageSpent: 127.5,
+        transactions: categoryTransactions['Entertainment']
+      },
+      {
+        id: '4',
+        name: 'Transportation',
+        budgeted: 120,
+        spent: 85.25,
+        remaining: 34.75,
+        percentageSpent: 71.04,
+        transactions: categoryTransactions['Transportation']
+      },
+      {
+        id: '5',
+        name: 'Shopping',
+        budgeted: 300,
+        spent: 393.23,
+        remaining: -93.23,
+        percentageSpent: 131.08,
+        transactions: categoryTransactions['Shopping']
+      },
+      {
+        id: '6',
+        name: 'Utilities',
+        budgeted: 200,
+        spent: 186.41,
+        remaining: 13.59,
+        percentageSpent: 93.21,
+        transactions: categoryTransactions['Utilities']
       }
     ]
+
+    const dateRange: DateRange = {
+      start: new Date(2024, 2, 18), // March 18, 2024
+      end: new Date(2024, 2, 24)    // March 24, 2024
+    }
 
     const dailySpending: DailySpending[] = [
       {
         label: 'Mon',
-        amount: 45.50,
+        amount: 145.50,
         date: new Date(2024, 2, 18),
         transactions: [
-          { id: 1, payee: 'Grocery Store', amount: 35.50, category: 'Groceries' },
-          { id: 2, payee: 'Coffee Shop', amount: 10.00, category: 'Dining Out' }
+          { id: 1, payee: 'Grocery Store', amount: 85.50, category: 'Groceries' },
+          { id: 2, payee: 'Coffee Shop', amount: 10.00, category: 'Dining Out' },
+          { id: 3, payee: 'Gas Station', amount: 50.00, category: 'Transportation' }
         ]
       },
       {
@@ -39,8 +116,55 @@ export class DemoDataService {
         amount: 65.75,
         date: new Date(2024, 2, 19),
         transactions: [
-          { id: 3, payee: 'Restaurant', amount: 45.75, category: 'Dining Out' },
-          { id: 4, payee: 'Pharmacy', amount: 20.00, category: 'Health' }
+          { id: 4, payee: 'Restaurant', amount: 45.75, category: 'Dining Out' },
+          { id: 5, payee: 'Pharmacy', amount: 20.00, category: 'Health' }
+        ]
+      },
+      {
+        label: 'Wed',
+        amount: 235.25,
+        date: new Date(2024, 2, 20),
+        transactions: [
+          { id: 6, payee: 'Online Shopping', amount: 199.99, category: 'Shopping' },
+          { id: 7, payee: 'Gas Station', amount: 35.25, category: 'Transportation' }
+        ]
+      },
+      {
+        label: 'Thu',
+        amount: 85.99,
+        date: new Date(2024, 2, 21),
+        transactions: [
+          { id: 8, payee: 'Internet Bill', amount: 65.99, category: 'Utilities' },
+          { id: 9, payee: 'Coffee Shop', amount: 20.00, category: 'Dining Out' }
+        ]
+      },
+      {
+        label: 'Fri',
+        amount: 155.50,
+        date: new Date(2024, 2, 22),
+        transactions: [
+          { id: 10, payee: 'Movie Theater', amount: 30.50, category: 'Entertainment' },
+          { id: 11, payee: 'Restaurant', amount: 45.00, category: 'Dining Out' },
+          { id: 12, payee: 'Department Store', amount: 80.00, category: 'Shopping' }
+        ]
+      },
+      {
+        label: 'Sat',
+        amount: 195.25,
+        date: new Date(2024, 2, 23),
+        transactions: [
+          { id: 13, payee: 'Department Store', amount: 125.25, category: 'Shopping' },
+          { id: 14, payee: 'Restaurant', amount: 70.00, category: 'Dining Out' }
+        ]
+      },
+      {
+        label: 'Sun',
+        amount: 125.00,
+        date: new Date(2024, 2, 24),
+        transactions: [
+          { id: 15, payee: 'Grocery Store', amount: 65.00, category: 'Groceries' },
+          { id: 16, payee: 'Brunch', amount: 35.00, category: 'Dining Out' },
+          { id: 17, payee: 'Gas Station', amount: 25.00, category: 'Transportation' }
         ]
       }
     ]
@@ -50,7 +174,9 @@ export class DemoDataService {
       totalSpent: 750,
       remainingBudget: 250,
       categories,
-      dailySpending
+      dailySpending,
+      dateRange,
+      daysLeft: 3
     }
   }
 

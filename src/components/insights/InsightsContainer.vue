@@ -1,17 +1,17 @@
 <template>
-  <div class="insights-section">
-    <div class="section-header">
-      <h2>Insights</h2>
+  <div class="insights-container">
+    <div class="insights-header">
+      <h2 class="budget-title">Weekly Insights</h2>
+      
       <div class="filter-tabs">
-        <button 
-          v-for="tab in tabs" 
+        <div
+          v-for="tab in tabs"
           :key="tab.id"
-          :class="{ active: activeTab === tab.id }"
+          :class="['filter-tab', { active: activeTab === tab.id }]"
           @click="activeTab = tab.id"
-          class="tab-button"
         >
-          {{ tab.label }}
-        </button>
+          {{ tab.name }}
+        </div>
       </div>
     </div>
 
@@ -19,190 +19,203 @@
       <InsightCard
         v-for="insight in filteredInsights"
         :key="insight.id"
-        v-bind="insight"
+        :type="insight.type"
+        :category="insight.category"
+        :title="insight.title"
+        :description="insight.description"
+        :impact="insight.impact"
+        :trend="insight.trend"
       />
     </div>
 
-    <div class="insights-link">
-      <router-link to="/insights" class="link">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 4v16m0-16l-4 4m4-4l4 4" />
-        </svg>
-        View All Insights
-      </router-link>
+    <div v-if="filteredInsights.length === 0" class="no-insights">
+      <p>No {{ activeTab !== 'all' ? activeTab : '' }} insights available for this week.</p>
     </div>
-    <div class="budget-title">
-      <div>
-        <h3>Weekly Insights</h3>
-        <p>Your spending habits and savings progress</p>
-      </div>
-    </div>
+
+    <router-link to="/insights" class="view-all-link">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM15.88 8.29L10 14.17L8.12 12.29C7.73 11.9 7.1 11.9 6.71 12.29C6.32 12.68 6.32 13.31 6.71 13.7L9.3 16.29C9.69 16.68 10.32 16.68 10.71 16.29L17.3 9.7C17.69 9.31 17.69 8.68 17.3 8.29C16.91 7.9 16.27 7.9 15.88 8.29Z" fill="#4CAF50"/>
+      </svg>
+      View All Insights
+    </router-link>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import InsightCard from './InsightCard.vue';
+import { ref, computed, defineComponent } from 'vue'
+import InsightCard from './InsightCard.vue'
 
-interface Insight {
-  id: number;
-  type: 'savings' | 'alert';
-  category: string;
-  title: string;
-  description: string;
-  impact: number;
-  trend?: number;
-}
+const activeTab = ref('all')
 
 const tabs = [
-  { id: 'all', label: 'All' },
-  { id: 'savings', label: 'Savings' },
-  { id: 'alerts', label: 'Alerts' }
-];
+  { id: 'all', name: 'All' },
+  { id: 'savings', name: 'Savings' },
+  { id: 'alert', name: 'Alerts' }
+]
 
-const activeTab = ref('all');
-
-const insights: Insight[] = [
+const insights = [
   {
     id: 1,
     type: 'savings',
     category: 'Groceries',
-    title: 'Under budget this week',
-    description: 'You spent less on groceries compared to your usual spending.',
-    impact: 25.50,
-    trend: -15
+    title: 'Spent 15% less on groceries',
+    description: 'You spent $25 less on groceries compared to last week.',
+    impact: '+$25',
+    trend: 'positive'
   },
   {
     id: 2,
     type: 'alert',
-    category: 'Dining Out',
-    title: 'Higher than usual spending',
-    description: 'Your dining out expenses are trending higher than last week.',
-    impact: -45.75,
-    trend: 25
+    category: 'Entertainment',
+    title: 'Entertainment budget exceeded',
+    description: 'You exceeded your entertainment budget by $27.50 this week.',
+    impact: '-$27.50',
+    trend: 'negative'
+  },
+  {
+    id: 3,
+    type: 'savings',
+    category: 'Transportation',
+    title: 'Lower transportation costs',
+    description: 'Using public transit saved you money this week.',
+    impact: '+$15',
+    trend: 'positive'
+  },
+  {
+    id: 4,
+    type: 'alert',
+    category: 'Shopping',
+    title: 'Shopping budget exceeded',
+    description: 'You spent $93.23 over your shopping budget this week.',
+    impact: '-$93.23',
+    trend: 'negative'
   }
-];
+]
 
 const filteredInsights = computed(() => {
-  if (activeTab.value === 'all') return insights;
-  return insights.filter(insight => 
-    activeTab.value === 'savings' ? insight.type === 'savings' : insight.type === 'alert'
-  );
-});
+  if (activeTab.value === 'all') {
+    return insights
+  }
+  return insights.filter(insight => insight.type === activeTab.value)
+})
+
+defineExpose({
+  activeTab,
+  tabs,
+  filteredInsights
+})
+</script>
+
+<script lang="ts">
+export default defineComponent({
+  name: 'InsightsContainer'
+})
 </script>
 
 <style scoped>
-.insights-section {
+.insights-container {
   margin-top: 2rem;
   background: #1A1D23;
   border-radius: 1rem;
-  padding: 1.5rem;
+  padding: 2rem;
 }
 
-.section-header h2 {
+.insights-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.budget-title {
   font-size: 1.75rem;
   font-weight: 600;
   color: #FFFFFF;
-  margin-bottom: 1.5rem;
 }
 
 .filter-tabs {
   display: flex;
-  gap: 0.75rem;
-  margin-bottom: 2rem;
-  background: #242731;
-  padding: 0.5rem;
-  border-radius: 2rem;
-  width: fit-content;
+  gap: 0.5rem;
 }
 
-.tab-button {
+.filter-tab {
   padding: 0.75rem 2rem;
   border: none;
-  background: none;
+  background: #242731;
   color: #94A3B8;
-  border-radius: 1.5rem;
-  font-size: 1rem;
-  font-weight: 500;
+  border-radius: 2rem;
+  font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.tab-button:hover {
+.filter-tab:hover {
   color: #FFFFFF;
 }
 
-.tab-button.active {
+.filter-tab.active {
   background: #3B82F6;
   color: #FFFFFF;
 }
 
 .insights-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
   margin-bottom: 2rem;
 }
 
-.insights-link {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 1rem;
+.no-insights {
+  text-align: center;
+  color: #94A3B8;
+  padding: 2rem 0;
 }
 
-.insights-link .link {
+.view-all-link {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #94A3B8;
+  color: #4CAF50;
   text-decoration: none;
   font-size: 0.875rem;
-}
-
-.insights-link .link svg {
-  stroke: currentColor;
-}
-
-.budget-title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  font-weight: 500;
   margin-top: 1rem;
 }
 
-.budget-title div {
-  text-align: center;
-}
-
-.budget-title h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #FFFFFF;
-  margin-bottom: 0.5rem;
-}
-
-.budget-title p {
-  font-size: 1rem;
-  color: #94A3B8;
+.view-all-link svg {
+  stroke: currentColor;
 }
 
 @media (max-width: 768px) {
-  .insights-section {
+  .insights-container {
     padding: 1rem;
   }
 
-  .section-header h2 {
+  .budget-title {
     font-size: 1.5rem;
   }
 
-  .filter-tabs {
-    padding: 0.375rem;
+  .insights-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
   }
 
-  .tab-button {
+  .filter-tabs {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .filter-tab {
     padding: 0.5rem 1.5rem;
     font-size: 0.875rem;
+    flex-shrink: 0;
+  }
+
+  .insights-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 }
 </style> 

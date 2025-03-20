@@ -1,32 +1,17 @@
 <template>
-  <div class="demo">
-    <div class="demo-header">
-      <h1>Weekly Dashboard</h1>
-      <div class="auth-actions">
-        <button class="primary-button" @click="navigateToLogin">
-          Connect Your YNAB Account
-        </button>
+  <Layout>
+    <div class="demo">
+      <div class="demo-header">
+        <h1>Weekly Dashboard</h1>
+        <div class="auth-actions">
+          <button class="primary-button" @click="navigateToLogin">
+            Connect Your YNAB Account
+          </button>
+        </div>
       </div>
+
+      <WeeklyDashboard />
     </div>
-
-    <WeeklyDashboard />
-
-    <footer class="demo-footer">
-      <nav class="footer-nav">
-        <router-link to="/dashboard/weekly" class="nav-item">
-          <i class="fas fa-chart-pie"></i>
-          <span>Weekly View</span>
-        </router-link>
-        <router-link to="/dashboard/transactions" class="nav-item">
-          <i class="fas fa-list"></i>
-          <span>Transactions</span>
-        </router-link>
-        <button class="nav-item account-button" @click="showAccountModal = true">
-          <i class="fas fa-user-circle"></i>
-          <span>Account</span>
-        </button>
-      </nav>
-    </footer>
 
     <!-- Account Modal -->
     <div v-if="showAccountModal" class="modal">
@@ -49,13 +34,14 @@
         <button class="close-button" @click="showAccountModal = false">Close</button>
       </div>
     </div>
-  </div>
+  </Layout>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import WeeklyDashboard from '@/components/dashboard/WeeklyDashboard.vue'
+import Layout from '@/components/common/Layout.vue'
 
 const router = useRouter()
 const showAccountModal = ref(false)
@@ -108,50 +94,6 @@ function testConnection() {
 
 .primary-button:hover {
   background: var(--primary-dark);
-}
-
-.demo-footer {
-  margin-top: auto;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  padding: 0.75rem;
-}
-
-.footer-nav {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-  color: var(--text-secondary);
-  text-decoration: none;
-  padding: 0.5rem;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-}
-
-.nav-item:hover {
-  color: var(--primary);
-  background: var(--surface-hover);
-}
-
-.nav-item i {
-  font-size: 1.25rem;
-}
-
-.account-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: inherit;
-  color: inherit;
 }
 
 .modal {
