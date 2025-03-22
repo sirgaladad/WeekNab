@@ -13,7 +13,9 @@
     "build:simple": "vite build --config vite.simple.js",
     "preview": "vite preview",
     "test": "vitest",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "db:migrate": "supabase db push",
+    "db:demo": "supabase db reset && node scripts/run-demo-data.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
@@ -35,6 +37,7 @@
     "eslint": "^8.0.0",
     "eslint-plugin-vue": "^9.0.0",
     "jsdom": "^24.0.0",
+    "supabase": "^1.145.4",
     "typescript": "^5.0.0",
     "vite": "^5.0.0",
     "vitest": "^1.0.0"

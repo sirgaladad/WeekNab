@@ -24,6 +24,14 @@ export default defineConfig(({ mode }) => {
       'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(env.VITE_SUPABASE_URL),
       'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(env.VITE_SUPABASE_ANON_KEY),
       'import.meta.env.VITE_ENCRYPTION_KEY': JSON.stringify(env.VITE_ENCRYPTION_KEY)
+    },
+    // Fix for CommonJS modules
+    build: {
+      commonjsOptions: {
+        transformMixedEsModules: true,
+        include: [/node_modules/]
+      },
+      sourcemap: true
     }
   }
 }) 

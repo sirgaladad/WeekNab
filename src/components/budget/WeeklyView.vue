@@ -98,7 +98,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { getWeeklyBudget, type WeeklyBudget, type WeeklyCategory } from '@/services/ynab-weekly.service'
+import { getWeeklyData, type WeeklyBudget, type WeeklyCategory } from '@/services/ynab-weekly.service'
 import type { TransactionDetail } from 'ynab'
 
 const route = useRoute()
@@ -144,7 +144,7 @@ const filteredCategories = computed(() => {
 async function loadWeeklyBudget() {
   try {
     const budgetId = route.params.budgetId as string
-    weeklyBudget.value = await getWeeklyBudget(budgetId, currentDate.value)
+    weeklyBudget.value = await getWeeklyData(budgetId, currentDate.value)
   } catch (error) {
     console.error('Error loading weekly budget:', error)
   }

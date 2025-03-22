@@ -1,181 +1,259 @@
 <template>
   <div class="weekly-dashboard">
-    <DashboardHeader status="Demo" />
+    <DashboardHeader :status="props.isDemoMode ? 'Demo' : 'Connected'" />
 
-    <div class="dashboard-content">
+    <div v-if="isLoading && !weeklyData" class="loading-container">
+      <p>Loading your budget data...</p>
+      <!-- You could add a spinner here -->
+        </div>
+        
+    <div v-else-if="showPlaceholder" class="placeholder-container">
+      <h2>Unable to load budget data</h2>
+      <p>Please try again later or check your connection.</p>
+      <button @click="loadData" class="reload-btn">Retry</button>
+    </div>
+
+    <div v-else-if="weeklyData" class="dashboard-content">
       <h1 class="weekly-budget-title">Weekly Budget</h1>
       
       <WeekNavigation 
-        :date-range-text="formatDateRange" 
-        :days-remaining="daysLeft"
-        :is-current-week="isCurrentWeek"
-        @previous-week="loadPreviousWeek"
-        @next-week="loadNextWeek"
+        :date-range-text="formattedDateRange" 
+        :days-remaining="weeklyData.insights.daysLeft"
+        :is-current-week="true"
+        @previous-week="handlePreviousWeek"
+        @next-week="handleNextWeek"
       />
 
       <BudgetSummary 
-        :total-budget="totalBudget"
-        :total-spent="totalSpent"
-        :remaining-budget="remainingBudget"
+        :total-budget="weeklyData.budget.total"
+        :total-spent="weeklyData.budget.spent"
+        :remaining-budget="weeklyData.budget.remaining"
       />
 
-      <CategorySection :categories="categories" />
+      <CategorySection :categories="convertCategories(weeklyData.categories)" />
 
       <div class="weekly-insights">
-        <DailySpendingChart :daily-spending="dailySpending" />
+        <DailySpendingChart :daily-spending="convertDailySpending(dailySpendingData)" />
         
         <SavingsGoalCard 
           :goal-amount="500"
           :current-saved="350"
-          :weekly-contribution="125"
+          :weekly-contribution="weeklyData.insights.goalImpact.amount"
         />
 
         <InsightsContainer />
-      </div>
-    </div>
+            </div>
+          </div>
 
     <DashboardFooter 
-      :show-toast="showToast"
-      :toast-message="toastMessage"
-      @exit="handleExit"
-      @try-now="handleTryNow"
-      @close-toast="showToast = false"
+      v-if="props.isDemoMode"
+      :show-toast="true"
+      toast-message="Want to try WeekNab with your own budget? Connect with your YNAB account now!"
+      @exit="$router.push('/')"
+      @try-now="$router.push('/login')"
+      @close-toast="() => {}"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { DemoDataService } from '@/services/DemoDataService';
-import { useRouter } from 'vue-router';
-import InsightsContainer from '@/components/insights/InsightsContainer.vue';
-import DashboardHeader from './sections/DashboardHeader.vue';
-import WeekNavigation from './sections/WeekNavigation.vue';
-import BudgetSummary from './sections/BudgetSummary.vue';
-import CategorySection from './sections/CategorySection.vue';
-import DailySpendingChart from './sections/DailySpendingChart.vue';
-import SavingsGoalCard from './sections/SavingsGoalCard.vue';
-import DashboardFooter from './sections/DashboardFooter.vue';
-import type { CategoryData, DailySpending, DateRange } from '@/types/budget';
+import { ref, onMounted, computed, watch } from 'vue'
+import { useYNABWeeklyService } from '@/composables/useYNABWeekly'
+import { getCurrentWeekDemoData, getPreviousWeekDemoData, getNextWeekDemoData } from '@/services/demo-supabase.service'
+import DashboardHeader from './sections/DashboardHeader.vue'
+import WeekNavigation from './sections/WeekNavigation.vue'
+import BudgetSummary from './sections/BudgetSummary.vue'
+import CategorySection from './sections/CategorySection.vue'
+import DailySpendingChart from './sections/DailySpendingChart.vue'
+import SavingsGoalCard from './sections/SavingsGoalCard.vue'
+import DashboardFooter from './sections/DashboardFooter.vue'
+import InsightsContainer from '@/components/insights/InsightsContainer.vue'
+import type { WeeklyBudgetData, CategoryData } from '@/services/demo-data.service'
+import type { DateRange, DailySpending, Transaction } from '@/types'
+import { useYNABStore } from '@/stores/ynab'
+import { useAuthStore } from '@/stores/auth'
 
-const router = useRouter();
-const emit = defineEmits(['showLoginModal']);
+const { 
+  getWeeklyBudgetData, 
+  navigateToPreviousWeek, 
+  navigateToNextWeek, 
+  isLoading, 
+  currentDateRange
+} = useYNABWeeklyService()
 
-// State management
-const totalBudget = ref(0);
-const totalSpent = ref(0);
-const remainingBudget = ref(0);
-const categories = ref<CategoryData[]>([]);
-const dailySpending = ref<DailySpending[]>([]);
-const dateRange = ref<DateRange>({
-  start: new Date(),
-  end: new Date()
-});
-const daysLeft = ref(0);
-const isCurrentWeek = ref(true);
+const props = defineProps<{
+  isDemoMode: boolean
+}>()
 
-// Toast state
-const showToast = ref(false);
-const toastMessage = ref('');
-let toastTimeout: number | null = null;
+const ynabStore = useYNABStore()
+const authStore = useAuthStore()
 
-// Computed properties
-const formatDateRange = computed(() => {
-  if (!dateRange.value.start || !dateRange.value.end) return '';
-  
-  const start = dateRange.value.start;
-  const end = dateRange.value.end;
-  
-  // Format: Mar 18 - Mar 24, 2024
-  const startMonth = start.toLocaleString('default', { month: 'short' });
-  const endMonth = end.toLocaleString('default', { month: 'short' });
-  const startDay = start.getDate();
-  const endDay = end.getDate();
-  const year = end.getFullYear();
-  
-  if (startMonth === endMonth) {
-    return `${startMonth} ${startDay} - ${endDay}, ${year}`;
-  } else {
-    return `${startMonth} ${startDay} - ${endMonth} ${endDay}, ${year}`;
-  }
-});
+const weeklyData = ref<WeeklyBudgetData | null>(null)
+const dailySpendingData = ref<DailySpending[]>([])
+const showPlaceholder = ref(false)
+const error = ref<string | null>(null)
 
-// Methods
-const loadWeekData = async () => {
+const isDataLoaded = computed(() => !!weeklyData.value && !isLoading.value)
+
+const loadData = async () => {
   try {
-    const data = await DemoDataService.getWeeklyData();
+    isLoading.value = true
+    error.value = null
     
-    if (!data) {
-      console.error('No data received from DemoDataService');
-      return;
+    if (props.isDemoMode) {
+      console.log('Loading demo data from Supabase for WeeklyDashboard')
+      weeklyData.value = await getCurrentWeekDemoData()
+  } else {
+      console.log('Loading real YNAB data for WeeklyDashboard')
+      weeklyData.value = await ynabStore.getCurrentWeekData()
     }
     
-    totalBudget.value = data.totalBudget || 0;
-    totalSpent.value = data.totalSpent || 0;
-    remainingBudget.value = data.remainingBudget || 0;
-    categories.value = data.categories || [];
-    dailySpending.value = data.dailySpending || [];
-    dateRange.value = data.dateRange || {
-      start: new Date(),
-      end: new Date()
-    };
-    daysLeft.value = data.daysLeft || 0;
-  } catch (error) {
-    console.error('Error loading weekly data:', error);
-    // Set default values in case of error
-    totalBudget.value = 0;
-    totalSpent.value = 0;
-    remainingBudget.value = 0;
-    categories.value = [];
-    dailySpending.value = [];
-    dateRange.value = {
-      start: new Date(),
-      end: new Date()
-    };
-    daysLeft.value = 0;
+    if (weeklyData.value) {
+      generateDailySpendingData()
+    }
+  } catch (e) {
+    console.error('Error loading weekly data:', e)
+    error.value = 'Failed to load budget data. Please try again.'
+    showPlaceholder.value = true
+  } finally {
+    isLoading.value = false
   }
-};
+}
 
-const loadPreviousWeek = () => {
-  isCurrentWeek.value = false;
-  console.log('Loading previous week...');
-  // This would normally load the previous week's data
-};
+// Format date range for display
+const formattedDateRange = computed(() => {
+  if (!weeklyData.value) return ''
+  const start = weeklyData.value.dateRange.start
+  const end = weeklyData.value.dateRange.end
+  return `${start.toLocaleDateString()} - ${end.toLocaleDateString()}`
+})
 
-const loadNextWeek = () => {
-  isCurrentWeek.value = true;
-  console.log('Loading next week...');
-  // This would normally load the next week's data
-};
-
-const handleExit = () => {
-  router.push('/');
-};
-
-const handleTryNow = () => {
-  emit('showLoginModal');
-};
-
-const showToastNotification = (message: string) => {
-  toastMessage.value = message;
-  showToast.value = true;
+// Generate daily spending data for visualization
+function generateDailySpendingData() {
+  if (!weeklyData.value) return
   
-  // Hide toast after 10 seconds
-  if (toastTimeout) clearTimeout(toastTimeout);
-  toastTimeout = window.setTimeout(() => {
-    showToast.value = false;
-  }, 10000);
-};
-
-// Lifecycle hooks
-onMounted(async () => {
-  await loadWeekData();
+  const startDate = weeklyData.value.dateRange.start
+  const endDate = weeklyData.value.dateRange.end
   
-  // Show the notification after 5 seconds
-  setTimeout(() => {
-    showToastNotification('Want to try WeekNab with your own budget? Connect with your YNAB account now!');
-  }, 5000);
-});
+  // Create array of all dates in the week
+  const dates: Date[] = []
+  const currentDate = new Date(startDate)
+  
+  while (currentDate <= endDate) {
+    dates.push(new Date(currentDate))
+    currentDate.setDate(currentDate.getDate() + 1)
+  }
+  
+  // Map all transactions to their dates
+  const allTransactions = weeklyData.value.categories.flatMap(cat => 
+    cat.transactions.map(trans => ({
+      ...trans,
+      category: cat.name,
+      color: cat.color
+    }))
+  )
+  
+  // Create daily spending entries
+  dailySpendingData.value = dates.map(date => {
+    const dayTransactions = allTransactions.filter(t => 
+      t.date.toDateString() === date.toDateString()
+    )
+    
+    return {
+      date,
+      total: dayTransactions.reduce((sum, t) => sum + Math.abs(t.amount), 0),
+      transactions: dayTransactions
+    }
+  })
+}
+
+// Convert data to match expected types for components
+function convertDailySpending(data: DailySpending[]): any[] {
+  return data.map(day => ({
+    label: day.date.toLocaleString('en-US', { weekday: 'short' }),
+    amount: day.total,
+    date: day.date,
+    transactions: day.transactions
+  }))
+}
+
+function convertCategories(categories: CategoryData[]): any[] {
+  return categories.map(cat => ({
+    id: cat.id,
+    name: cat.name,
+    color: cat.color,
+    budgeted: cat.budgeted,
+    spent: cat.spent,
+    remaining: cat.remaining,
+    percentageSpent: cat.percentageSpent,
+    isOverBudget: cat.isOverBudget,
+    transactions: cat.transactions.map(t => ({
+      ...t,
+      date: t.date.toISOString().split('T')[0] // Convert to string format expected by component
+    }))
+  }))
+}
+
+// Navigation handlers (work in both modes)
+async function handlePreviousWeek() {
+  try {
+    isLoading.value = true
+    if (props.isDemoMode) {
+      weeklyData.value = await getPreviousWeekDemoData(weeklyData.value?.dateRange.start || new Date())
+    } else {
+      navigateToPreviousWeek()
+    }
+    if (weeklyData.value) {
+      generateDailySpendingData()
+    }
+  } catch (error) {
+    console.error('Error navigating to previous week:', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+async function handleNextWeek() {
+  try {
+    isLoading.value = true
+    if (props.isDemoMode) {
+      weeklyData.value = await getNextWeekDemoData(weeklyData.value?.dateRange.start || new Date())
+    } else {
+      navigateToNextWeek()
+    }
+    if (weeklyData.value) {
+      generateDailySpendingData()
+    }
+  } catch (error) {
+    console.error('Error navigating to next week:', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// Watch for date range changes in authenticated mode
+watch(currentDateRange, () => {
+  if (!props.isDemoMode) {
+    loadData()
+  }
+})
+
+// Initial loading
+onMounted(() => {
+  console.log('WeeklyDashboard mounted in', props.isDemoMode ? 'demo mode' : 'authenticated mode')
+  loadData()
+})
+
+// Computed properties for UI display
+const spendingProgress = computed(() => {
+  if (!weeklyData.value) return 0
+  return (weeklyData.value.budget.spent / weeklyData.value.budget.total) * 100
+})
+
+const overBudgetCategories = computed(() => {
+  if (!weeklyData.value) return []
+  return weeklyData.value.categories.filter(cat => cat.isOverBudget)
+})
 </script>
 
 <style scoped>
@@ -203,6 +281,54 @@ onMounted(async () => {
 
 .weekly-insights {
   margin-bottom: 2rem;
+}
+
+.placeholder-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.placeholder-container h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.placeholder-container p {
+  margin-bottom: 2rem;
+  color: var(--text-secondary);
+}
+
+.reload-btn {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.reload-btn:hover {
+  background-color: var(--primary-dark);
 }
 
 @media (min-width: 1024px) {
@@ -234,7 +360,11 @@ onMounted(async () => {
   
   .weekly-budget-title {
     font-size: 1.75rem;
-    margin-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+  .placeholder-container h2 {
+    font-size: 1.25rem;
   }
 }
 </style> 
